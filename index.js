@@ -9,13 +9,14 @@
 var express = require('express');
 var body_parse = require('body-parser');
 var app = express();
-var account_router = require('./account/router');
+var account_router = require('./account/router.js');
+var relation_router = require('./relation/router.js');
 
 app.use(body_parse.urlencoded());
 app.use(body_parse.json());
 
 app.use('/account/', account_router);
-
+app.use('/relation/', relation_router);
 
 var server = app.listen(3000, function(){
 	var host = server.address().address;

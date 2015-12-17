@@ -7,7 +7,7 @@
  */
 
 var mongoose = require('mongoose');
-var MONGO_URL = 'mongodb://121.40.158.110/maili_user';
+var MONGO_URL = 'mongodb://121.40.158.110/maili';
 mongoose.connect(MONGO_URL);
 
 var db = mongoose.connection;
@@ -31,7 +31,7 @@ var check_user_exist = function(user_phone, callback){
 	});
 };
 
-var create_new_user = function(data, callback){
+var create_new_user = function(data){
 	var user = new UserModel(data);
 	user.register_data = new Date();
 	user.is_login = true;
@@ -41,7 +41,7 @@ var create_new_user = function(data, callback){
 
 	user.save(function(err){
 		if(err) throw err;
-		callback(err);
+		return true;
 	});
 };
 
