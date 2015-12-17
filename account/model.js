@@ -15,11 +15,11 @@ var UserSchema = new Schema({
 	password: String,
 	phone: String,
 	gender: {type: String, enum: ['F', 'M', 'U'], default: 'U'},
-	marital_status: Boolean,
-	nickname: String,
-	is_login: Boolean,
+	marital_status: {type: Boolean, default: null},
+	nickname: {type: String, default: null},
+	is_login: {type: Boolean, default: false},
 	tagline: String, // Self description.
-	avatar: String, // Avatar url,
+	avatar: {type: String, default: null}, // Avatar url,
 	last_login_date: Date,
 	register_date: {type: Date, default: Date.now},
 

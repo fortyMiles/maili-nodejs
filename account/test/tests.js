@@ -29,9 +29,9 @@ describe('Account Handler', function(done){
 			};
 
 			var user = new User(data);
+
 			user.save(function(err){
 				if(err) throw err;
-				assert.equal(err, 2);
 				done();
 			});
 		});
