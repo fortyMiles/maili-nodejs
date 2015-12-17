@@ -1,0 +1,30 @@
+/*
+ * Test for maili.
+ *
+ * @Author Minchiuan Gao <minchiuan.gao@gmail.com>
+ * @Date 2015-17-Dec
+ *
+ */
+
+var assert = require('assert');
+var chai = require('chai');
+var chaiAsPromised = require("chai-as-promised");
+var Q = require('q');
+chai.use(chaiAsPromised);
+
+chai.should();
+
+describe('Account Handler', function(){
+	var handler = require('../handler.js');
+
+	describe('#create_new_user()', function(){
+		it('return true when creat finished', function(){
+			var data = {
+				first_name: '刘',
+				phone: '18857453090',
+				password: '123456',
+			};
+			handler.create_new_user(data)
+		});
+	});
+});

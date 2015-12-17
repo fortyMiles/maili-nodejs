@@ -1,0 +1,34 @@
+{
+  "name": "ls",
+  "version": "0.0.1",
+  "description": "The Maili Backend Server",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fortyMiles/maili-nodejs.git"
+  },
+  "keywords": [
+    "Social",
+    "Family",
+    "Nodejs"
+  ],
+  "author": "Minchiuan Gao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fortyMiles/maili-nodejs/issues"
+  },
+  "homepage": "https://github.com/fortyMiles/maili-nodejs#readme",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "chai": "^3.4.1",
+    "chai-as-promised": "^5.1.0",
+    "express": "^4.13.3",
+    "mocha": "^2.3.4",
+    "mongoose": "^4.3.1",
+    "q": "^1.4.1",
+    "ramda": "^0.18.0"
+  }
+}
