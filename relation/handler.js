@@ -7,7 +7,7 @@
  */
 
 var mongoose = require('mongoose');
-var MONGO_URL = 'mongodb://121.40.158.110/maili';
+var MONGO_URL = 'mongodb://localhost/maili';
 var _ = require('ramda');
 
 mongoose.connect(MONGO_URL);
@@ -53,7 +53,6 @@ var create_converse_relation = function(data){
 	Q.promise(function(resolve, reject){
 		User.findOne({phone: new_user2}, function(err, user) {
 			if(err) throw err;
-				debugger;
 			if(user.gender == 'F'){
 				relation = relation_value[old_relation].ctf;
 			}else{

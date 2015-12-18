@@ -42,13 +42,13 @@ var check_user_exist = function(req, res, next){
 var create_user = function(req, res, next){
 	var data = req.body;
 
-	handler.create_new_user(data, function(err){
-		if(err){
+	handler.create_new_user(data, function(token){
+		if(token){
+			res.status(201);
+			res.json({token: token});
+		}else{
 			res.status(400);
 			res.json({error: 'an error'});
-		}else{
-			res.status(201);
-			res.json({user: 'created'});
 		}
 	});
 };
@@ -76,10 +76,10 @@ var _update = function(data, res){
 var login_user = function(req, res, next){
    var user_phone = req.body.phone;
    var password = req.body.password;
-   handler.login(user_phone, password, function(user){
+   handler.login(user_phone, password, function(token){
 	   if(user){
 		   res.status(201);
-		   res.json({login: 'true'});
+		   res.json({token: token});
 	   }else{
 		   res.status(406);
 		   res.json({error: 'account or password error'});

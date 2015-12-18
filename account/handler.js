@@ -7,7 +7,7 @@
  */
 
 var mongoose = require('mongoose');
-var MONGO_URL = 'mongodb://121.40.158.110/maili';
+var MONGO_URL = 'mongodb://localhost/maili';
 mongoose.connect(MONGO_URL);
 
 var db = mongoose.connection;
@@ -31,17 +31,16 @@ var check_user_exist = function(user_phone, callback){
 	});
 };
 
-var create_new_user = function(data){
+var create_new_user = function(data, callback){
 	var user = new UserModel(data);
 	user.register_data = new Date();
 	user.is_login = true;
 
-	var initial_feeds = ['home', 'relation', 'friend'];
-	initial_feeds.map(user.add_feed_group, user);
+	user.initiate();
+	user.generate_session_code();
 
-	user.save(function(err){
-		if(err) throw err;
-		return true;
+	user.save(function(err, user){
+		if(callback) callback(user.current_session_token);
 	});
 };
 
@@ -57,10 +56,11 @@ var update_user = function(data, callback){
 
 var login = function(username, password, callback){
 	UserModel.findOne({phone: username, password: password},function(err, user){
-		callback(user);
 		if(user){
 			user.login();
+			user.generate_session_code();
 			user.save();
+			callback(user.current_session_token);
 		}
 	});
 };

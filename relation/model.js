@@ -22,6 +22,12 @@ var GroupSchema = new Schema({
 	slogen: {type: String, default: null}
 });
 
+/*
+ * Add a member to self member list.
+ *
+ * @param {String} the user's object id;
+ *
+ */
 GroupSchema.methods.add_member = function(username, nickname){
 	this.memeber.push({
 		nickname: nickname,
@@ -32,8 +38,8 @@ GroupSchema.methods.add_member = function(username, nickname){
 var Group = mongoose.model('Group',GroupSchema);
 
 var RelationSchema = new Schema({
-	user1: String,
-	user2: String,
+	user1: String, 
+	user2: String, 
 	relation: String,
 	scope: {type: String, enum: ['H', 'F', 'R']},
 	nickname: {type: String, default: null},
