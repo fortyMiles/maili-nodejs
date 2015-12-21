@@ -12,6 +12,19 @@ var UserModel = require('./model.js').User;
 
 var assert = require('assert');
 
+/*
+ * Gets a user object by phone number.
+ *
+ * @param {String} phonenumber of user.
+ * @param {Function} callback of user object.
+ */
+var get_user_by_phone = function(user_phone, callback){
+	UserModel.findOne({phone: user_phone}, function(err, user){
+		if(err) throw err;
+		callback(user);
+	});
+};
+
 var check_user_exist = function(user_phone, callback){
 	var restirction = {
 		phone: user_phone,
@@ -32,7 +45,7 @@ var create_new_user = function(data, callback){
 	user.generate_session_code();
 
 	user.save(function(err, user){
-		if(callback) callback(user.current_session_token);
+		if(callback) callback(user);
 	});
 };
 
@@ -71,4 +84,5 @@ module.exports = {
 	update_user: update_user,
 	login: login,
 	get_user_information: get_user_information,
+	get_user_by_phone: get_user_by_phone,
 };
