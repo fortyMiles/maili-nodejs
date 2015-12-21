@@ -60,7 +60,7 @@ var create_home = function(home_id, creator, callback){
 
 	home.save(function(err, home){
 		if(err) throw err;
-		callback(home);
+		if(callback) callback(home);
 	});
 };
 

@@ -35,7 +35,7 @@ HomeSchema.methods.add_member = function(username){
 	});
 };
 
-var Home = mongoose.model('Group', HomeSchema);
+var Home = mongoose.model('Home', HomeSchema);
 
 var RelationSchema = new Schema({
 	user1: String, 
