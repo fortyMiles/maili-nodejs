@@ -32,6 +32,7 @@ describe('Account Model', function(done){
 		first_name: '高1',
 		phone: '18857453090',
 		password: '11111111',
+		gender: 'F',
 	};
 
 
@@ -39,6 +40,12 @@ describe('Account Model', function(done){
 		it('return same phone number when creat finished', function(done){
 			var user = new Model.User(data);
 			assert.equal(user.phone, '18857453090');
+			done();
+		});
+
+		it('should not be a male', function(done){
+			var user = new Model.User(data);
+			assert.isNotTrue(user.is_male());
 			done();
 		});
 	});
