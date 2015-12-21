@@ -8,17 +8,61 @@
 
 var db_connection = require('../configuration/db.js');
 
-var Group = require('./model.js').Group;
-var User = require('../account/model.js').User;
+var Home = require('./model.js').Home;
 var Relation = require('./model.js').Relation;
-var relation_value = require('./data/relation_value.js').value;
 var Q = require('q');
+var relation_dic = require('./data/relation_value.js');
 
-var key_in_dic = function(relation_dic, relation){
-	return relation in relation_dic;
+
+/*
+ * Tests if this relation is acceptable
+ *
+ * @param {String} relation
+ *
+ * @return {Boolean} if this relation is acceptable.
+ *
+ */
+
+var relation_accept = relation_dic.relation_accept;
+
+
+/*
+ * Get home object by home id.
+ *
+ * @param {String} home_id
+ *
+ * @callback {Function} callback of getted home
+ * @api public
+ *
+ */
+
+var get_home_by_id = function(home_id, callback){
+	Home.findOne({home_id: home_id}, function(err,  home){
+		if(err) throw err;
+		callback(home);
+	});
 };
 
-var relation_accept = _.curry(key_in_dic)(relation_value);
+/*
+ * Create home 
+ *
+ * @param {String} home_id
+ * @param {String} user_id
+ *
+ * @callback of saved home.
+ */
+
+var create_home = function(home_id, creator, callback){
+	var home = new Home({
+		home_id: home_id,
+		creator: creator,
+	});
+
+	home.save(function(err, home){
+		if(err) throw err;
+		callback(home);
+	});
+};
 
 var create_new_relation = function(data, callback){
 	var relation = new Relation(data);
@@ -44,9 +88,7 @@ var create_converse_relation = function(data){
 		User.findOne({phone: new_user2}, function(err, user) {
 			if(err) throw err;
 			if(user.gender == 'F'){
-				relation = relation_value[old_relation].ctf;
 			}else{
-				relation = relation_value[old_relation].ctm;
 			}
 			resolve(relation);
 		});
@@ -109,4 +151,6 @@ module.exports = {
 	relation_accept: relation_accept,
 	check_relation_exist: check_relation_exist,
 	create_new_relation: create_new_relation,
+	create_home: create_home,
+	get_home_by_id: get_home_by_id,
 };

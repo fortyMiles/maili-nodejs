@@ -24,7 +24,7 @@ var decode_token = function(code){
 	return code_phone/random_number;
 };
 
-describe('Account Model', function(done){
+describe('Account Model', function(){
 	var handler = require('../handler.js');
 	var Model = require('../model.js');
 

@@ -56,6 +56,28 @@ var get_converse_relation_from_value_dic = function(value_dic, is_male, relation
 
 var get_converse_relation = _.curry(get_converse_relation_from_value_dic)(VALUE);
 
+/*
+ * Check if key in a dictionary.
+ *
+ */
+
+var key_in_dic = function(relation_dic, relation){
+	return relation in relation_dic;
+};
+
+/*
+ * Tests this value if is acceptable.
+ *
+ * @param {String} relation
+ *
+ * @return {Boolean} if this relation is acceptable.
+ *
+ */
+
+var relation_accept = _.curry(key_in_dic)(VALUE);
+
+
 module.exports = {
 	get_converse_relation: get_converse_relation,
+	relation_accept: relation_accept,
 };

@@ -45,6 +45,10 @@ var UserSchema = new Schema({
 	}],
 });
 
+UserSchema.methods.is_male = function(){
+	return this.gender == 'M';
+};
+
 UserSchema.methods.login = function(){
 	this.is_login = true;
 	this.last_login_date = new Date();
