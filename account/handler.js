@@ -6,6 +6,8 @@
  *
  */
 
+var db_connection = require('../configuration/db.js');
+
 var UserModel = require('./model.js').User;
 
 var assert = require('assert');

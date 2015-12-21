@@ -1,3 +1,10 @@
+/*
+ * Configuration of db connection.
+ *
+ * @Author Minchiuan Gao <minchuian.gao@gmail.com>
+ * @Date 2015-21-Dec
+ */
+
 var mongoose = require('mongoose');
 var MONGO_URL = 'mongodb://localhost/maili';
 mongoose.connect(MONGO_URL);

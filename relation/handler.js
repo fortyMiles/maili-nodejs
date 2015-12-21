@@ -6,17 +6,7 @@
  *
  */
 
-var mongoose = require('mongoose');
-var MONGO_URL = 'mongodb://localhost/maili';
-var _ = require('ramda');
-
-mongoose.connect(MONGO_URL);
-
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connect error'));
-db.once('open', function(){
-	console.log('db connected');
-});
+var db_connection = require('../configuration/db.js');
 
 var Group = require('./model.js').Group;
 var User = require('../account/model.js').User;
