@@ -6,7 +6,9 @@
  *
  */
 
-var value = {
+var _ = require('ramda');
+
+var VALUE = {
 	'妻子': {weight: 1, level:1, ctf: '丈夫', ctm: '丈夫'},
 	'丈夫': {weight: 1, level:1, ctf: '妻子', ctm: '妻子'},
 	'儿子': {weight: 2, level:1, ctf: '母亲', ctm: '父亲'},
@@ -29,6 +31,31 @@ var value = {
 	'婆婆': {weight: 5, level:2, ctf: '媳妇', ctm: '媳妇'},
 };
 
+/*
+ * Get converse female relation.
+ *
+ * @param {String} relation value dictionary.
+ * @param {Boolean} if person a is male. A called B father, is A is famle A is B's son, else A is B's daughter.
+ * @param {String} A called B what.
+ * 
+ * @return {String} converse relation.
+ *
+ */
+
+var get_converse_relation_from_value_dic = function(value_dic, is_male, relation){
+	if(is_male){
+		return value_dic[relation].ctm;
+	}else{
+		return value_dic[relation].ctf;
+	}
+};
+
+/*
+ * Get relation from this value.
+ */
+
+var get_converse_relation = _.curry(get_converse_relation_from_value_dic)(VALUE);
+
 module.exports = {
-	value: value,
+	get_converse_relation: get_converse_relation,
 };
