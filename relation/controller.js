@@ -6,25 +6,33 @@
  *
  */
 
-var handler = require('./handler.js');
+var user_handler = require('../account/handler.js');
+var relation_handler = require('./handler.js');
+
+/*
+ * Change user's id to user object and change home's id to home object.
+ *
+ *
+ */
+var change_id_to_object = function(req, res, next){
+	var data = req.body;
+
+	user_handler.get_user_by_phone(data.user1, function(user){
+		req.locals.user1 = user;
+	});
+
+	user_handler.get_user_by_phone(data.user1, function(user){
+		req.locals.user2 = user;
+	});
+
+	relation_handler.get_home_by_id(data.home_id, function(home){
+		req.locals.home = home;
+	});
+
+	next();
+};
 
 var create_relation = function(req, res, next){
-	var data = req.body;
-	var relation = data.relation;
-
-	if(!handler.relation_accept(relation)){
-		res.status(406);
-		res.json({relation: 'relation unaccept'});
-	}
-
-	handler.check_relation_exist(data.user1, data.user2, function(count){
-		if(count !== 0){
-			res.status(409);
-			res.json({relation: 'relaton existed'});
-		}else{
-			_add_new_relation(res, data);
-		}
-	});
 };
 
 var _add_new_relation = function(res, data){
