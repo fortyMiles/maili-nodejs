@@ -25,7 +25,6 @@ var decode_token = function(code){
 };
 
 describe('Account Model', function(){
-	var handler = require('../handler.js');
 	var Model = require('../model.js');
 
 	var data = {
@@ -148,6 +147,21 @@ describe('Account Model', function(){
 
 	});
 
+});
+
+describe('User Handler', function(){
+
+	var handler = require('../handler.js');
+
+	describe('#get_user_by_phone()', function(){
+		it('should give a user have same phone number of parameter phone number', function(done){
+			var phone = '18857453090';
+			handler.get_user_by_phone(phone, function(user){
+				assert.equal(user.phone, phone);
+				done();
+			});
+		});
+	});
 });
 
 if(require.main == module){

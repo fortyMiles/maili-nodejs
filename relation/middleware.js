@@ -7,14 +7,30 @@
  *
  */
 
+var relation_value = require('./data/relation_value.js');
 /*
- * Change user's id to user object and change home's id to home object.
+ * Check if relation is accepctable.
+ *
+ * @api public
+ *
+ */
+
+var check_relation_acceptable = function(req, res, next){
+	if(relation_value.relation_accept(req.body.relation)){
+		next();
+	}else{
+		res.status(400);
+		res.json({relation_unacceptable: req.body.relation});
+	}
+};
+/*
+ * check if content with required paramter format.
  *
  * @api public
  *
  */
 var check_parameter = function(req, res, next){
-	var paramters = ['user1_is_male', 'relation', 'user1', 'user2', 'scope'];
+	var paramters = ['user1_is_male', 'user1_name', 'relation', 'user1', 'user2', 'scope', 'home_id'];
 
 	var lack = false;
 	var lack_paramter = [];
@@ -33,4 +49,9 @@ var check_parameter = function(req, res, next){
 	}
 };
 
+
+module.exports = {
+	check_parameter: check_parameter,
+	check_relation_acceptable: check_relation_acceptable,
+};
 

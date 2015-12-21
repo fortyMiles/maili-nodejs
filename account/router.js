@@ -17,6 +17,7 @@ router.use(function(req, res, next){
 
 router.get('/info/:username', controller.get_user_information);
 router.get('/exist/:username', controller.check_user_exist);
+router.get('/home_list/:user_phone', controller.get_home_list);
 
 router.route('/user/')
 .post(controller.create_user)

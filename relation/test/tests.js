@@ -70,3 +70,35 @@ describe('Relation Model', function(){
 	});
 });
 
+describe('Relation Handler', function(){
+	var handler = require('../handler.js');
+
+	describe('#create_home()', function(){
+
+		var home_id = 'home_id';
+		var creator = 'creator';
+
+		it('should save a home, which home_id is saved home_id', function(done){
+			handler.create_home(home_id, creator, function(home){
+				assert.equal(home.home_id, home_id);
+				assert.equal(home.creator, creator);
+				done();
+			});
+		});
+
+	});
+
+	describe('#get_home_by_id()', function(){
+		it('should get a home, which home is is paramter id', function(done){
+
+			var home_id = 'home_id';
+			handler.get_home_by_id(home_id, function(home){
+				assert.equal(home.home_id, home_id);
+				done();
+			});
+
+		});
+	});
+	
+});
+

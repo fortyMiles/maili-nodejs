@@ -7,6 +7,7 @@
  */
 
 var handler = require('./handler.js');
+var relation_handler = require('../relation/handler.js');
 var _ = require('ramda');
 
 var get_user_information = function(req, res, next){
@@ -42,10 +43,11 @@ var check_user_exist = function(req, res, next){
 var create_user = function(req, res, next){
 	var data = req.body;
 
-	handler.create_new_user(data, function(token){
-		if(token){
+	handler.create_new_user(data, function(user){
+		if(user){
 			res.status(201);
-			res.json({token: token});
+			res.json({token: user.current_session_token});
+			relation_handler.create_home(user.default_home, user.user_id, function(home){});
 		}else{
 			res.status(400);
 			res.json({error: 'an error'});
@@ -107,11 +109,24 @@ var get_captcha = function(req, res, next){
 	res.json({code: new_code});
 };
 
+/*
+ * Get home list of a user.
+ *
+ */
+
+var get_home_list = function(req, res, next){
+	handler.get_user_joined_home(req.params.user_phone, function(homes){
+		res.status(202);
+		res.json({data: homes});
+	});
+};
+
 module.exports = {
 	get_user_information: get_user_information,
 	check_user_exist: check_user_exist,
 	create_user: create_user,
 	update_user: update_user,
 	login_user: login_user,
-	get_captcha: get_captcha
+	get_captcha: get_captcha,
+	get_home_list: get_home_list,
 };

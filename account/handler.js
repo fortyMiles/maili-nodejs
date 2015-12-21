@@ -25,6 +25,23 @@ var get_user_by_phone = function(user_phone, callback){
 	});
 };
 
+
+/*
+ * Get user joined home.
+ *
+ * @param {String} user's phone number
+ *
+ * @callback function of user's home list.
+ *
+ */
+
+var get_user_joined_home = function(user_phone, callback){
+	UserModel.findOne({phone: user_phone}, function(err, user){
+		if(err) throw err;
+		callback(user.home);
+	});
+};
+
 var check_user_exist = function(user_phone, callback){
 	var restirction = {
 		phone: user_phone,
@@ -71,7 +88,7 @@ var login = function(username, password, callback){
 };
 
 var get_user_information = function(username, callback){
-	UserModel.findOne({phone: username}, '-_id phone first_name gender marital_status nickname avatar', function(err, user){
+	UserModel.findOne({phone: username}, '-_id first_name avatar nickname marital_status gender', function(err, user){
 		if(err) throw err;
 		callback(user);
 	});
@@ -85,4 +102,5 @@ module.exports = {
 	login: login,
 	get_user_information: get_user_information,
 	get_user_by_phone: get_user_by_phone,
+	get_user_joined_home: get_user_joined_home,
 };

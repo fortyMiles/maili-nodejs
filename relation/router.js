@@ -9,15 +9,20 @@
 var express = require('express');
 var router = express.Router();
 var controller = require('./controller.js');
+var middleware = require('./middleware.js');
 
 router.use(function(req, res, next){
 	console.log('check token');
 	next();
 });
 
-router.post('/create/', controller.create_relation);
+router.post('/create/', 
+			middleware.check_parameter, 
+			middleware.check_relation_acceptable,
+			controller.create_relation);
 
 router.get('/contract/:username', controller.get_contract);
+
 router.get('/home_member/:username', controller.get_home_member);
 router.get('/home_id/:username', controller.get_home_id);
 router.get('/relation_id/:username', controller.get_relation_id);

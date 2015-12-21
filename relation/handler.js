@@ -50,6 +50,9 @@ var get_home_by_id = function(home_id, callback){
  * @param {String} user_id
  *
  * @callback of saved home.
+ *
+ * @api public
+ *
  */
 
 var create_home = function(home_id, creator, callback){
@@ -64,11 +67,17 @@ var create_home = function(home_id, creator, callback){
 	});
 };
 
+/*
+ * Create a new relation.
+ *
+ * @param {json} data of relation info
+ *
+ * @api public
+ *
+ */
 var create_new_relation = function(data, callback){
 	var relation = new Relation(data);
 	relation.save();
-
-	create_converse_relation(data);
 };
 
 var check_relation_exist = function(user1, user2, callback){
@@ -76,59 +85,6 @@ var check_relation_exist = function(user1, user2, callback){
 		if(err) throw err;
 		callback(count);
 	});
-};
-
-var create_converse_relation = function(data){
-	var new_user1 = data.user2;
-	var new_user2 = data.user1;
-	var old_relation = data.relation;
-	var old_scope = data.scope;
-
-	Q.promise(function(resolve, reject){
-		User.findOne({phone: new_user2}, function(err, user) {
-			if(err) throw err;
-			if(user.gender == 'F'){
-			}else{
-			}
-			resolve(relation);
-		});
-	}).then(function(relation){
-		console.log(relation);
-	}).done();
-	/*
-	   var new_relation = Q.fcall(function(){
-	   var relation = 'new';
-	   var user_gender =  User.findOne({phone: new_user2}, function(err, user){
-	   if(err) throw err;
-	   if(user.gender == 'F'){
-	   relation = relation_value[old_relation].cft;
-	   return relation;
-	   }else{
-	   relation = relation_value[old_relation].cmt;
-	   return relation;
-	   }
-	   });
-	   }).then(function(relation){
-	   console.log(relation);
-	   }).done();
-	   */
-
-	var new_scope = old_scope;
-	//var new_scope = _get_converse_scope(new_user1, new_user2, data, old_relation);
-
-	/*
-	   var converse_relation = new Relation({
-user1: new_user1,
-user2: new_user2,
-relation: new_relation,
-scope: new_scope,
-});
-
-converse_relation.save();
-*/
-};
-
-var _get_converse_relation = function(new_user1, new_user2, old_relation){
 };
 
 /*
