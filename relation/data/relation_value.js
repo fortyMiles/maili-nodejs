@@ -25,10 +25,13 @@ var VALUE = {
 	'媳妇': {weight: 4, level:2, ctf: '婆婆', ctm: '公公'},
 	'爷爷': {weight: 5, level:2, ctf: '孙女', ctm: '孙子'},
 	'奶奶': {weight: 5, level:2, ctf: '孙女', ctm: '孙子'},
+	'外公': {weight: 5, level:2, ctf: '外孙女', ctm: '外孙'},
+	'外婆': {weight: 5, level:2, ctf: '外孙女', ctm: '外孙'},
 	'岳父': {weight: 5, level:2, ctf: '女婿', ctm: '女婿'},
 	'岳母': {weight: 5, level:2, ctf: '女婿', ctm: '女婿'},
 	'公公': {weight: 5, level:2, ctf: '媳妇', ctm: '媳妇'},
 	'婆婆': {weight: 5, level:2, ctf: '媳妇', ctm: '媳妇'},
+	'亲家': {weight: 6, level:3, ctf: '亲家', ctm: '亲家'},
 };
 
 /*
