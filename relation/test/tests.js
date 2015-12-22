@@ -6,9 +6,17 @@
  *
  */
 
-var db_connection = require('../../configuration/db.js');
+var db_connection = require('../../configuration/test_db.js');
+
+require('blanket')({
+	pattern: function (f){
+		return !/node_modules/.test(f);
+	}
+});
+
 var Home = require('../model.js').Home;
 var Relation = require('../model.js').Relation;
+var Home = require('../model.js').Home;
 var User = require('../../account/model.js').User;
 var chai = require('chai');
 
@@ -64,6 +72,18 @@ describe('Relation Model', function(){
 
 			Relation.create_converse_relation(user1.phone, user2.phone, relation, 'H', user1_is_male , function(new_relation){
 				assert.equal(new_relation, excepted_relation);
+				done();
+			});
+		});
+	});
+
+	describe('#add_person_to_a_home()', function(){
+		it('should add a person to a home member list', function(done){
+			var person = '11111';
+			var home_id = 'home_id';
+			Home.add_person_to_a_home(home_id, person, function(home){
+				assert.isNotNull(home);
+				assert.lengthOf(home.member, 1);
 				done();
 			});
 		});
