@@ -54,14 +54,18 @@ var create_relation = function(req, res, next){
 		scope: data.scope,
 	});
 
-	if(data.scope != HOME){
-		res.status(200);
-		res.json({created: 'success'});
-	}else if(user_not_exist){
+	if(user_not_exist){
 		res.status(404);
 		res.json({user_not_exist: 'user1 or user2 is not exist'});
+	}else if(data.scope != HOME){
+		res.status(200);
+		res.json({created: 'success'});
 	}else{
-		next();
+		relation_handler.add_person_to_a_home(data.home_id, data.user2, function(home){});
+		user_handler.add_home_to_a_person(data.user2, data.home_id, data.user1, converse_relation, function(user){});
+		res.status(200);
+		res.json({created: 'success'});
+		next(); // next() to update_home_member_contract()
 	}
 };
 
@@ -69,6 +73,10 @@ var create_relation = function(req, res, next){
  * Update family member contract.
  *
  */
+
+var add_person_to_home = function(user1, user2, home_id){
+	//relation_handler.every_member_add_person_to_contract(home_id, req.body.user2);
+};
 
 var _add_new_relation = function(res, data){
 	handler.create_new_relation(data);

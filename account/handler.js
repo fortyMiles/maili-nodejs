@@ -94,6 +94,18 @@ var get_user_information = function(username, callback){
 	});
 };
 
+/*
+ * Add a home to a user's home list.
+ *
+ * @param {String} username
+ * @param {String} home_id
+ * @param {String} home_owner
+ * @param {String} relation
+ *
+ */
+var add_home_to_a_person = function(username, home_id, home_owner, relation, callback){
+	UserModel.add_home_to_a_person(username, home_id, home_owner, relation, callback);
+};
 
 module.exports = {
 	create_new_user: create_new_user,
@@ -103,4 +115,5 @@ module.exports = {
 	get_user_information: get_user_information,
 	get_user_by_phone: get_user_by_phone,
 	get_user_joined_home: get_user_joined_home,
+	add_home_to_a_person: add_home_to_a_person,
 };

@@ -131,6 +131,28 @@ UserSchema.methods.initiate_self_code = function(){
 	var user_id = create_id_by_name_and_time(this.phone, 'SELF');
 	this.user_id = user_id;
 };
+
+/*
+ * Add a person in person's home list.
+ *
+ * @param {String} person_id
+ * @param {String} home_id
+ *
+ * @api public
+ *
+ */
+
+UserSchema.statics.add_home_to_a_person = function(person_id, home_id, home_owner, relation, callback){
+	this.findOne({phone: person_id}, function(err, user){
+		if(err) throw err;
+		if(user){
+			user.add_a_home(home_id, home_owner, relation);
+			user.save();
+		}
+		callback(user);
+	});
+};
+
 /*
  * Push a home in his home list.
  *

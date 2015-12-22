@@ -6,6 +6,14 @@
  *
  */
 
+var db_connection = require('../../configuration/test_db.js');
+
+require('blanket')({
+	pattern: function (filename) {
+		return !/node_modules/.test(filename);
+	}
+});
+
 var chai = require('chai');
 var chaiAsPromised = require("chai-as-promised");
 var Q = require('q');
@@ -25,6 +33,7 @@ var decode_token = function(code){
 };
 
 describe('Account Model', function(){
+
 	var Model = require('../model.js');
 
 	var data = {
@@ -39,6 +48,7 @@ describe('Account Model', function(){
 		it('return same phone number when creat finished', function(done){
 			var user = new Model.User(data);
 			assert.equal(user.phone, '18857453090');
+			user.save();
 			done();
 		});
 
@@ -144,7 +154,16 @@ describe('Account Model', function(){
 			assert.equal(user.contract[1].relation, 'R');
 			done();
 		});
+	});
 
+	describe('#add_home_to_a_person()', function(){
+
+		it('should add home id to self home list', function(done){
+			Model.User.add_home_to_a_person(data.phone, 'home_id', 'home_owner', 'relation', function(user){
+				assert.isNotNull(user.home);
+				assert.property(user.home[0].home_id, 'home_id');
+			});
+		});
 	});
 
 });

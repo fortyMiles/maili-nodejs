@@ -88,20 +88,48 @@ var check_relation_exist = function(user1, user2, callback){
 };
 
 /*
-   var _new_scope = function(old_relation){
-   var HOME = 'H';
-   var FRIEND = 'F';
-   var RELATION = 'R';
+ * Add a person to a home based on home id and person phone number.
+ *
+ * @param {String} home_id
+ * @param {Array} user_ids list.
+ *
+ */
 
-   var new_scope = null;
+var add_person_to_a_home = function(home_id, user_name){
+	Home.add_person_to_a_home(home_id, user_name, function(home){});
+};
 
-   if((old_relation == FRIEND) || (old_relation == RELATION)){
-   new_scope = old_relation;	
-   }else{
+/*
+ * Add a personn to a home.
+ *
+ */
 
-   }
-   };
-   */
+/*
+ * Check home existed
+ *
+ */
+
+var check_home_exist = function(home_id, callback){
+	Home.count({home_id: home_id}, function(err, count){
+		if(err) throw err;
+		callback(count);
+	});
+};
+
+/*
+ * Every member add person to contractor.
+ *
+ * @param {String} home_id
+ * @param {String} user_id
+ *
+ */
+
+var every_member_add_person_to_contract = function(home_id, target_user){
+    Home.find({home_id: home_id}, function(err, home){
+		if(err) throw err;
+		
+	});
+};
 
 module.exports = {
 	relation_accept: relation_accept,
@@ -109,4 +137,7 @@ module.exports = {
 	create_new_relation: create_new_relation,
 	create_home: create_home,
 	get_home_by_id: get_home_by_id,
+	add_person_to_a_home: add_person_to_a_home,
+	check_home_exist: check_home_exist,
+	
 };

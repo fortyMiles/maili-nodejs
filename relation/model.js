@@ -24,14 +24,41 @@ var HomeSchema = new Schema({
 });
 
 /*
+ * Every member add a person to self contract.
+ *
+ * @param {Model} User model
+ * @param target_id
+ *
+ */
+
+/*
+ * Static methods of Home Schema. 
+ *
+ * Add a memeber to a home.
+ *
+ * @param {String} home_id
+ * @param {String} user_phone_number
+ */
+
+HomeSchema.statics.add_person_to_a_home = function(home_id, user_phone, callback){
+	this.findOne({home_id: home_id}, function(err, home){
+		if(err) throw err;
+		if(home){
+			home.add_member(user_phone);
+			home.save();
+		}
+		callback(home);
+	});
+};
+/*
  * Add a member to self member list.
  *
  * @param {String} the user's object id;
  *
  */
-HomeSchema.methods.add_member = function(username){
+HomeSchema.methods.add_member = function(user_phone){
 	this.member.push({
-		username: username,
+		username: user_phone
 	});
 };
 
