@@ -55,16 +55,8 @@ var get_home_by_id = function(home_id, callback){
  *
  */
 
-var create_home = function(home_id, creator, callback){
-	var home = new Home({
-		home_id: home_id,
-		creator: creator,
-	});
-
-	home.save(function(err, home){
-		if(err) throw err;
-		if(callback) callback(home);
-	});
+var create_home = function(home_id, creator_id, creator_position, callback){
+	Home.create_home(home_id, creator_id, creator_position,callback);
 };
 
 /*

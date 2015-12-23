@@ -47,12 +47,10 @@ var create_user = function(req, res, next){
 		if(user){
 			res.status(201);
 			res.json({token: user.current_session_token});
-			relation_handler.create_home(
-				user.default_home, 
-				user.phone,  // this is set to user phone. But should be user.user_id.
-				user.default_home_position, 
-				function(home){}
-			);
+
+			if(user.need_home()){
+				_create_home_by_user(user);
+			}
 		}else{
 			res.status(400);
 			res.json({error: 'paramter error'});
@@ -60,13 +58,39 @@ var create_user = function(req, res, next){
 	});
 };
 
+/*
+ * Judge a person if need create a new home for him.
+ *
+ * @param {Model} user model
+
+*/
 var update_user = function(req, res, next){
 	var data = req.body; 
 
-	handler.update_user(data, function(number_affected){
-		res.status(200);
-		res.json({affectedNumber: number_affected.nModified});
+	handler.user_need_create_home(data, function(need_create_home){
+		handler.update_user(data, need_create_new_home, function(user){
+	       _create_home_by_user(user);
+		});
 	});
+
+	res.status(200);
+	res.json({affectedNumber: number_affected.nModified});
+};
+
+/*
+ * Create home by user.
+ *
+ */
+
+var _create_home_by_user = function(user){
+	if(user){
+		relation_handler.create_home(
+			user.default_home, 
+			user.phone,  // this is set to user phone. But should be user.user_id.
+			user.default_home_position, 
+			function(home){}
+		);
+	}
 };
 
 

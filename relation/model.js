@@ -14,15 +14,59 @@ var relation_value = require('./data/relation_value.js');
 var HomeSchema = new Schema({
 	home_id: String,
 	creator: String,
+	owner: String,
 	create_time: {type: Date, default: Date.now},
 	member:[{
 		username: String,
-		position: int,
+		position: Number,
 		//location: [],
 	}],
 	name: {type: String, default: null},
 	slogen: {type: String, default: null},
 });
+
+/*
+ * Update home owner
+ *
+ */
+
+HomeSchema.methods.update_home_owner = function(){
+	var HOST = 4;
+	this.member.map(function(user){
+		if(user.position == HOST){
+			this.owner = user.username;
+		}
+	});
+};
+/*
+ * Create a new home by defalut home and position.
+ *
+ * @param {String} home_id
+ * @param {String} creator
+ * @param {String} creator_position
+ *
+ *
+ */
+
+HomeSchema.statics.create_home = function(home_id, creator_id, creator_position, callback){
+	var home_data = {
+		home_id: home_id,
+		creator: creator_id,
+		member:[{
+			owner: creator_id,
+			username: creator_id,
+			position: creator_position,
+		}],
+	};
+
+	var home = new this(home_data);
+
+	home.save(function(err, home){
+		if(err) throw err;
+		home.update_home_owner();
+		callback(home);
+	});
+};
 
 /*
  * Every member add a person to self contract.

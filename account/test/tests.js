@@ -201,6 +201,71 @@ describe('Account Model', function(){
 		});
 	});
 
+	describe('#need_create_home()', function(){
+
+		it('should return true when married is unknon and marital status in data', function(){
+			var test_data_1 = {marital_status:false};
+			var test_data_2 = {marital_status:true};
+
+			var data = {
+				first_name: '高1',
+				phone: '18857453090',
+				password: '11111111',
+			};
+
+			var user = new Model.User(data);
+			assert.isTrue(user.need_create_home(test_data_1));
+			assert.isTrue(user.need_create_home(test_data_2));
+		});
+
+		it('should return true when married is unknon and gender in data', function(){
+			var test_data_1 = {gender:'F'};
+			var test_data_2 = {gender:'M'};
+
+			var data = {
+				first_name: '高1',
+				phone: '18857453090',
+				password: '11111111',
+			};
+
+			var user = new Model.User(data);
+			assert.isTrue(user.need_create_home(test_data_1));
+			assert.isTrue(user.need_create_home(test_data_2));
+		});
+
+		it('should return true when married is false and married is true in data', function(){
+
+			var test_data_2 = {marital_status: true};
+
+			var data = {
+				first_name: '高1',
+				phone: '18857453090',
+				password: '11111111',
+				marital_status: false,
+			};
+
+			var user = new Model.User(data);
+			assert.isTrue(user.need_create_home(test_data_2));
+		});
+
+		it('should return true when married and gender in initial', function(done){
+
+			var data = {
+				first_name: '高1',
+				phone: '18857453090',
+				password: '11111111',
+				marital_status: false,
+				gender: 'F',
+			};
+
+			var user = new Model.User(data);
+			assert.lengthOf(user.home, 0);
+			user.initiate();
+			assert.lengthOf(user.home, 1);
+			done();
+		});
+	});
+
 });
 
 describe('User Handler', function(){

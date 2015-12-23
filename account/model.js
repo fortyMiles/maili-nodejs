@@ -9,6 +9,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var _ = require('ramda');
+var assert = require('assert');
 
 var UserSchema = new Schema({
 	user_id: String, // user unique code.
@@ -25,6 +26,7 @@ var UserSchema = new Schema({
 	register_date: {type: Date, default: Date.now},
 	default_home: String, //everyone has a initial home.
 	current_session_token: String, // current session token. Every time login or register, will give a token back to him.
+	default_home_position: {type: Number, default: 4},
 
 	contract:[{ // a person's all contracts.
 		user_id:String,
@@ -45,6 +47,18 @@ var UserSchema = new Schema({
 	}],
 });
 
+UserSchema.methods.is_single = function(){
+	return this.marital_status === false;	
+};
+
+UserSchema.methods.marital_status_unknow = function(){
+	return this.marital_status === null || this.marital_status === undefined;
+};
+
+UserSchema.methods.gender_unknow = function(){
+	return this.gender == 'U';
+};
+
 UserSchema.methods.is_male = function(){
 	return this.gender == 'M';
 };
@@ -59,6 +73,67 @@ UserSchema.methods.logout = function(){
 };
 
 /*
+ * Need a home
+ *
+ */
+
+UserSchema.methods.need_home = function(){
+	return !(this.default_home === null || this.default_home === undefined);
+};
+
+/*
+ * Update user.
+ *
+ * @param {Json} new data
+ * @callback test if need create new home.
+ *
+ */
+
+UserSchema.statics.update_user = function(new_data, need_create_home, callback){
+	var restriction = {phone: new_data.phone};
+
+	this.update(restriction, new_data, function(err, numberAffected){
+		if(err) throw err;
+		if(need_create_home){
+			this.findOne(restriction, function(err, user){
+				user.create_new_home();
+				user.save();
+				callback(user);
+			});
+		}
+	});
+};
+/*
+ * Judge if need create a new home.
+ *
+ * @param {Json} current_data
+ *
+ * @return {Boolean} if need create a new home for him
+ * @api private
+ *
+ */
+
+UserSchema.methods.need_create_home= function(current_data){
+
+	var need = false;
+
+	if(this.marital_status_unknow() && 'marital_status' in current_data ){
+		need = true;
+	}
+
+	if(this.gender_unknow() && 'gender' in current_data){
+		need = true;
+	}
+
+	if(this.is_single() && 'marital_status' in current_data && current_data.marital_status === true){
+		need = true;
+	}
+
+	return need;
+};
+
+
+/*
  * Add a new person to self's contract list.
  *
  * @param {String} target's user id.
@@ -68,11 +143,11 @@ UserSchema.methods.logout = function(){
 UserSchema.methods.add_contractor = function(user_id, relation, nickname){
 	relation = relation || 'F';
 	nickname = nickname || null;
-   this.contract.push({
-	   user_id: user_id,
-	   nickname: nickname,
-	   relation: relation,
-   });
+	this.contract.push({
+		user_id: user_id,
+		nickname: nickname,
+		relation: relation,
+	});
 };
 
 /*
@@ -104,7 +179,7 @@ UserSchema.methods.initial_feed_group = function(){
 	var FEED_GROUP = ['relation', 'global'];
 
 	FEED_GROUP.map(function(e){
-	    var id = create_id_by_name_and_time(this.phone, e);
+		var id = create_id_by_name_and_time(this.phone, e);
 		this.feed_group.push({
 			group_id: id,
 			group_nickname:e,
@@ -121,7 +196,7 @@ UserSchema.methods.get_home_position = function(){
 	var HOST = 4;
 	var HOSTESS = 5;
 	var CHILD = 6;
-	
+
 	// position = {maritial_status: {male: status}}
 	var position = { 
 		null:{ // marital_status == null
@@ -237,11 +312,23 @@ UserSchema.methods.generate_session_code = function(){
 
 UserSchema.methods.initiate = function(){
 	this.initial_feed_group();
-	this.initial_self_home();
 	this.initiate_self_code();
-	this.add_a_home(this.default_home, this.phone);
+
+	if(!this.marital_status_unknow() && !this.gender_unknow()){
+		this.create_new_home();
+	}
 };
 
+/*
+ * Create a new home for self.
+ * When give user gender and married info or person change single to married, will create a home for a person.
+ *
+ */
+
+UserSchema.methods.create_new_home = function(){
+	this.initial_self_home();
+	this.add_a_home(this.default_home, this.phone);
+};
 /*
  * Create a new 'table'.
  *
