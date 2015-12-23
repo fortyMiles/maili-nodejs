@@ -68,13 +68,13 @@ var update_user = function(req, res, next){
 	var data = req.body; 
 
 	handler.user_need_create_home(data, function(need_create_home){
-		handler.update_user(data, need_create_new_home, function(user){
+		handler.update_user(data, need_create_home, function(user){
 	       _create_home_by_user(user);
 		});
 	});
 
 	res.status(200);
-	res.json({affectedNumber: number_affected.nModified});
+	res.json({update: true});
 };
 
 /*

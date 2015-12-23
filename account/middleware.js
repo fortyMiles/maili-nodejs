@@ -23,7 +23,7 @@ var check_duplicate = function(req, res, next){
 
 
 var check_user_exist = function(req, res, next){
-	handler.check_user_exist(data.phone, function(count){
+	handler.check_user_exist(req.body.phone, function(count){
 		if(count > 0){
 			next();
 		}else{

@@ -95,7 +95,7 @@ UserSchema.statics.update_user = function(new_data, need_create_home, callback){
 	this.update(restriction, new_data, function(err, numberAffected){
 		if(err) throw err;
 		if(need_create_home){
-			this.findOne(restriction, function(err, user){
+			User.findOne(restriction, function(err, user){
 				user.create_new_home();
 				user.save();
 				callback(user);
@@ -125,7 +125,7 @@ UserSchema.methods.need_create_home= function(current_data){
 		need = true;
 	}
 
-	if(this.is_single() && 'marital_status' in current_data && current_data.marital_status === true){
+	if(this.is_single() && 'marital_status' in current_data && current_data.marital_status.toString() === true.toString()){
 		need = true;
 	}
 

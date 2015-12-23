@@ -68,13 +68,13 @@ var create_new_user = function(data, callback){
 
 
 var user_need_create_home = function(data, callback){
-	userModel.findOne({phone: data.phone}, function(err, user){
-		callback(user.need_create_new_home());
+	UserModel.findOne({phone: data.phone}, function(err, user){
+		callback(user.need_create_home(data));
 	});
 };
 
 var update_user = function(data, need_new_home, callback){
-	userModel.update_user(data, need_new_home, callback);
+	UserModel.update_user(data, need_new_home, callback);
 };
 
 var login = function(username, password, callback){
@@ -117,4 +117,5 @@ module.exports = {
 	get_user_by_phone: get_user_by_phone,
 	get_user_joined_home: get_user_joined_home,
 	add_home_to_a_person: add_home_to_a_person,
+	user_need_create_home: user_need_create_home,
 };
