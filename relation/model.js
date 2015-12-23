@@ -45,7 +45,7 @@ HomeSchema.statics.add_person_to_a_home = function(home_id, user_phone, position
 	this.findOne({home_id: home_id}, function(err, home){
 		if(err) throw err;
 		if(home){
-			home.add_member(user_phone, position);
+			home.add_member(user_phone, Number(position));
 			home.save();
 		}
 		callback(home);
@@ -60,7 +60,7 @@ HomeSchema.statics.add_person_to_a_home = function(home_id, user_phone, position
 HomeSchema.methods.add_member = function(user_phone, position){
 	this.member.push({
 		username: user_phone,
-		position: position,
+		position: Number(position),
 	});
 };
 

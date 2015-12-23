@@ -95,8 +95,8 @@ var check_relation_exist = function(user1, user2, callback){
  *
  */
 
-var add_person_to_a_home = function(home_id, user_name, position){
-	Home.add_person_to_a_home(home_id, user_name, position, function(home){});
+var add_person_to_a_home = function(home_id, user_name){
+	Home.add_person_to_a_home(home_id, user_name, function(home){});
 };
 
 /*
