@@ -66,6 +66,7 @@ describe('Account Model', function(){
 	});
 
 	describe('#initial_self_home()', function(){
+
 		it('should create a new defalut home in self model, \nthis default name should include data.phone', function(done){
 			var user = new Model.User(data);
 			user.initial_self_home();
@@ -73,6 +74,39 @@ describe('Account Model', function(){
 			assert.include(user.default_home, data.phone);
 			done();
 		});
+
+		it('should give a default code for this user, when no married info and gender is F, code should be 5', function(done){
+			var user = new Model.User(data);
+			user.initial_self_home();
+			assert.equal(user.default_home_position, 5);
+			done();
+		});
+
+		var HOST = 4;
+		var HOSTESS = 5;
+		var CHILD = 6;
+
+		var default_position_test_data = [
+			{gender: 'F', married : null, excepted : HOSTESS},
+			{gender: 'M', married : null, excepted : HOST},
+			{gender: 'F', married : true, excepted : HOSTESS},
+			{gender: 'F', married : false, excepted : CHILD},
+			{gender: 'M', married : true, excepted : HOST},
+			{gender: 'M', married : false, excepted : CHILD},
+		];
+
+		default_position_test_data.map(function(test){
+			it('should give a default code for this user, when married is '+ test.married + 'and gender is ' + test.gender + ' code should be '+ test.excepted, function(){
+
+				data.gender = test.gender;
+				data.marital_status = test.married;
+
+				var user = new Model.User(data);
+				user.initial_self_home();
+				assert.equal(user.default_home_position, test.excepted);
+			});
+		});
+
 	});
 
 	describe('#add_a_home()', function(){
@@ -132,7 +166,7 @@ describe('Account Model', function(){
 
 		var user = new Model.User(data);
 		user.add_contractor('user_id');
-        
+
 		it('should add a new friend, contract list length should be one', function(done){
 			assert.lengthOf(user.contract, 2);
 			done();
@@ -161,7 +195,8 @@ describe('Account Model', function(){
 		it('should add home id to self home list', function(done){
 			Model.User.add_home_to_a_person(data.phone, 'home_id', 'home_owner', 'relation', function(user){
 				assert.isNotNull(user.home);
-				assert.property(user.home[0].home_id, 'home_id');
+				assert.property(user.home[0], 'home_id');
+				done();
 			});
 		});
 	});

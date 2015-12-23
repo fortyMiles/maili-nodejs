@@ -120,6 +120,26 @@ UserSchema.methods.initial_feed_group = function(){
 UserSchema.methods.initial_self_home = function(){
 	var home_id = create_id_by_name_and_time(this.phone, 'home');
 	this.default_home = home_id;
+
+	var HOST = 4;
+	var HOSTESS = 5;
+	var CHILD = 6;
+
+	if(this.marital_status !== null){
+		if(this.marital_status === false){
+			this.default_home_position = CHILD;
+		}else if(this.is_male()){ // married and is male.
+			this.default_home_position = HOST;
+		}else if(!this.is_male()){  // married and is falme
+			this.default_home_position = HOSTESS;
+		}
+	}else{
+		if(this.is_male()){
+			this.default_home_position = HOST;
+		}else{
+			this.default_home_position = HOSTESS;
+		}
+	}
 };
 
 /*

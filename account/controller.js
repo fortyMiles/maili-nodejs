@@ -47,27 +47,22 @@ var create_user = function(req, res, next){
 		if(user){
 			res.status(201);
 			res.json({token: user.current_session_token});
-			relation_handler.create_home(user.default_home, user.user_id, function(home){});
+			relation_handler.create_home(
+				user.default_home, 
+				user.user_id, 
+				user.default_home_position, 
+				function(home){}
+			);
 		}else{
 			res.status(400);
-			res.json({error: 'an error'});
+			res.json({error: 'paramter error'});
 		}
 	});
 };
 
 var update_user = function(req, res, next){
-    var data = req.body; 
+	var data = req.body; 
 
-	if(!('phone' in data)){
-		res.status(400);
-		res.json({error: 'without key: phone'});
-	}else{
-		_update(data, res);
-	}
-};
-
-
-var _update = function(data, res){
 	handler.update_user(data, function(number_affected){
 		res.status(200);
 		res.json({affectedNumber: number_affected.nModified});
@@ -76,17 +71,17 @@ var _update = function(data, res){
 
 
 var login_user = function(req, res, next){
-   var user_phone = req.body.phone;
-   var password = req.body.password;
-   handler.login(user_phone, password, function(token){
-	   if(user){
-		   res.status(201);
-		   res.json({token: token});
-	   }else{
-		   res.status(406);
-		   res.json({error: 'account or password error'});
-	   }
-   });
+	var user_phone = req.body.phone;
+	var password = req.body.password;
+	handler.login(user_phone, password, function(token){
+		if(user){
+			res.status(201);
+			res.json({token: token});
+		}else{
+			res.status(406);
+			res.json({error: 'account or password error'});
+		}
+	});
 };
 
 

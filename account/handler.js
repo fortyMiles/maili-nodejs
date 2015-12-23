@@ -70,10 +70,12 @@ var create_new_user = function(data, callback){
 var update_user = function(data, callback){
 	var phone = data.phone;
 
-	UserModel.update({phone:phone}, data, function(err, number_affected){
-		callback(number_affected);
+	userModel.findOne({phone: phone}, function(err, user){
+	// update self inforamtion.
+	// update home information.
 	});
 };
+
 
 
 var login = function(username, password, callback){
