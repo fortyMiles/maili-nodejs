@@ -76,8 +76,6 @@ var update_user = function(data, callback){
 	});
 };
 
-
-
 var login = function(username, password, callback){
 	UserModel.findOne({phone: username, password: password},function(err, user){
 		if(user){

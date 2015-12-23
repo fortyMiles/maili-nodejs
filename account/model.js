@@ -113,6 +113,38 @@ UserSchema.methods.initial_feed_group = function(){
 };
 
 /*
+ * Set user's home position.
+ *
+ */
+
+UserSchema.methods.get_home_position = function(){
+	var HOST = 4;
+	var HOSTESS = 5;
+	var CHILD = 6;
+	
+	// position = {maritial_status: {male: status}}
+	var position = { 
+		null:{ // marital_status == null
+			false: HOSTESS, // is female
+			true: HOST, // is male
+		},
+
+		true:{ // marital_status == true
+			false: HOSTESS,
+			true: HOST,
+		},
+
+		false:{
+			false: CHILD,
+			true: CHILD,
+		},
+	};
+
+	return position[this.marital_status][this.is_male()];
+
+
+};
+/*
  * Create a user's default home.
  *
  */
@@ -120,26 +152,8 @@ UserSchema.methods.initial_feed_group = function(){
 UserSchema.methods.initial_self_home = function(){
 	var home_id = create_id_by_name_and_time(this.phone, 'home');
 	this.default_home = home_id;
+	this.default_home_position = this.get_home_position();
 
-	var HOST = 4;
-	var HOSTESS = 5;
-	var CHILD = 6;
-
-	if(this.marital_status !== null){
-		if(this.marital_status === false){
-			this.default_home_position = CHILD;
-		}else if(this.is_male()){ // married and is male.
-			this.default_home_position = HOST;
-		}else if(!this.is_male()){  // married and is falme
-			this.default_home_position = HOSTESS;
-		}
-	}else{
-		if(this.is_male()){
-			this.default_home_position = HOST;
-		}else{
-			this.default_home_position = HOSTESS;
-		}
-	}
 };
 
 /*
