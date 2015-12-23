@@ -42,6 +42,7 @@ var UserSchema = new Schema({
 		home_nickname: String,
 		home_owner: String,
 		home_relation: String, // Relation with self and home owner.
+		self_home_position: {type:int, default: 4},
 	}],
 });
 
@@ -142,11 +143,11 @@ UserSchema.methods.initiate_self_code = function(){
  *
  */
 
-UserSchema.statics.add_home_to_a_person = function(person_id, home_id, home_owner, relation, callback){
+UserSchema.statics.add_home_to_a_person = function(person_id, home_id, home_owner, relation, position, callback){
 	this.findOne({phone: person_id}, function(err, user){
 		if(err) throw err;
 		if(user){
-			user.add_a_home(home_id, home_owner, relation);
+			user.add_a_home(home_id, home_owner, relation, position);
 			user.save();
 		}
 		callback(user);
@@ -160,7 +161,7 @@ UserSchema.statics.add_home_to_a_person = function(person_id, home_id, home_owne
  * @param {String} home_owner
  */
 
-UserSchema.methods.add_a_home = function(home_id, home_owner, relation){
+UserSchema.methods.add_a_home = function(home_id, home_owner, relation, position){
 	relation = relation || 'self';
 
 	this.home.push({
@@ -168,6 +169,7 @@ UserSchema.methods.add_a_home = function(home_id, home_owner, relation){
 		home_nickname: null,
 		home_owner: home_owner,
 		home_relation: relation,
+		self_home_position: position,
 	});
 };
 
