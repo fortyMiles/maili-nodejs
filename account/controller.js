@@ -49,7 +49,7 @@ var create_user = function(req, res, next){
 			res.json({token: user.current_session_token});
 			relation_handler.create_home(
 				user.default_home, 
-				user.user_id, 
+				user.phone,  // this is set to user phone. But should be user.user_id.
 				user.default_home_position, 
 				function(home){}
 			);
