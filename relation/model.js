@@ -17,6 +17,7 @@ var HomeSchema = new Schema({
 	create_time: {type: Date, default: Date.now},
 	member:[{
 		username: String,
+		position: int,
 		//location: [],
 	}],
 	name: {type: String, default: null},
@@ -40,11 +41,11 @@ var HomeSchema = new Schema({
  * @param {String} user_phone_number
  */
 
-HomeSchema.statics.add_person_to_a_home = function(home_id, user_phone, callback){
+HomeSchema.statics.add_person_to_a_home = function(home_id, user_phone, position, callback){
 	this.findOne({home_id: home_id}, function(err, home){
 		if(err) throw err;
 		if(home){
-			home.add_member(user_phone);
+			home.add_member(user_phone, position);
 			home.save();
 		}
 		callback(home);
@@ -56,9 +57,10 @@ HomeSchema.statics.add_person_to_a_home = function(home_id, user_phone, callback
  * @param {String} the user's object id;
  *
  */
-HomeSchema.methods.add_member = function(user_phone){
+HomeSchema.methods.add_member = function(user_phone, position){
 	this.member.push({
-		username: user_phone
+		username: user_phone,
+		position: position,
 	});
 };
 
