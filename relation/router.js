@@ -20,6 +20,8 @@ router.use(function(req, res, next){
 
 router.post('/create/', 
 			_.curry(account_middleware.check_paramter_lack)(['inviter', 'invitee', 'home_id', 'invitee_position', 'relation', 'scope']),
+			middleware.change_to_position_code,
+			middleware.check_relation_acceptable,
 			_.curry(middleware.change_id_to_model)('home'),
 			_.curry(middleware.change_id_to_model)('inviter'),
 			_.curry(middleware.change_id_to_model)('invitee'),

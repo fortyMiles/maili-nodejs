@@ -11,6 +11,23 @@ var Schema = mongoose.Schema;
 var _ = require('ramda');
 var assert = require('assert');
 
+Array.prototype.inArray = function(comparer){
+	for(var i=0; i < this.length; i++) { 
+		if(comparer(this[i])) 
+			{
+				throw(Error('find a existed!'));
+				return true; 
+			}
+	}
+	return false; 
+};
+
+Array.prototype.pushIfNotExist = function(element, comparer) { 
+	if (!this.inArray(comparer)) {
+		this.push(element);
+	}
+}; 
+
 var UserSchema = new Schema({
 	user_id: String, // user unique code.
 	first_name: String, 
@@ -33,6 +50,8 @@ var UserSchema = new Schema({
 		nickname: {type: String, default: null},
 		relation: {type: String, default: 'F'},
 	}],
+
+	_contract_mapper: {type: Object, default: {}},
 
 	feed_group:[{ // a person's feeds scope.
 		group_id: String,
@@ -137,6 +156,13 @@ UserSchema.methods.need_create_home= function(current_data){
  *
  */
 
+UserSchema.statics.add_contractor_to_a_person = function(user_id, new_user_id, relation, nickname){
+	this.findOne({phone: user_id}, function(err, user){
+		user.add_contractor(new_user_id, relation, nickname);
+		user.save();
+	});
+};
+
 /*
  * Add a new person to self's contract list.
  *
@@ -151,19 +177,18 @@ UserSchema.methods.add_contractor = function(user_id, relation, nickname){
 
 	var contractor_exist = false;
 
-	for(var i in this.contract){
-		if(this.contract[i].user_id == user_id){
-			contractor_exist = true;
-			break;
-		}
-	}
+	var new_contractor = {
+		user_id: user_id,
+		nickname: nickname,
+		relation: relation,
+	};
 
-	if(!contractor_exist){
-		this.contract.push({
-			user_id: user_id,
-			nickname: nickname,
-			relation: relation,
-		});
+	this.contract.pushIfNotExist(new_contractor, function(e){
+		return e.user_id == new_contractor.user_id;
+	});
+
+	if(!(user_id in this._contract_mapper)){
+		this._contract_mapper[user_id] = true;
 	}
 };
 

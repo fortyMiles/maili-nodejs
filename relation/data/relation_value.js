@@ -7,6 +7,7 @@
  */
 
 var _ = require('ramda');
+var assert = require('assert');
 
 var VALUE = {
 	'自己': {code: 0, weight: 0, level:0, ctf: '自己', ctm: '自己'},
@@ -75,7 +76,7 @@ var get_title = function(start, end, end_is_male){
 		// get converse relation.
 		converse_relation_code = relationMaxtix[end][start]; 
 		converse_relation = TITLES[converse_relation_code]; // get 爷爷
-		if((converse_relation in VALUE) === false){debugger;};
+		assert.equal(converse_relation in VALUE, true);
 		relation = get_converse_relation(end_is_male, converse_relation); // get 孙女 or 孙子
 	}
 	

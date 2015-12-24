@@ -108,6 +108,15 @@ var add_home_to_a_person = function(username, home_id, home_owner, relation, cal
 	UserModel.add_home_to_a_person(username, home_id, home_owner, relation, callback);
 };
 
+/*
+ * Add a user to a user's contractor.
+ *
+ */
+
+var add_user_to_a_user_contractor = function(user_id, new_user_id, relation, nickname){
+	UserModel.add_contractor_to_a_person(user_id, new_user_id, relation, nickname);
+};
+
 module.exports = {
 	create_new_user: create_new_user,
 	check_user_exist: check_user_exist,
@@ -118,4 +127,5 @@ module.exports = {
 	get_user_joined_home: get_user_joined_home,
 	add_home_to_a_person: add_home_to_a_person,
 	user_need_create_home: user_need_create_home,
+	add_user_to_a_user_contractor: add_user_to_a_user_contractor,
 };

@@ -10,6 +10,25 @@
 var handler = require('./handler.js');
 var _ = require('ramda');
 
+var verify_boolean = function(req, res, next){
+	var false_str = 'false';
+	var true_str = 'true';
+
+	if(req.body){
+		if('marital_status' in req.body){
+			var str_format = req.body.marital_status.toString().toLowerCase();
+			if(str_format == false_str){
+				req.body.marital_status = false;
+			}
+			if(str_format == true_str){
+				req.body.marital_status = true;
+			}
+		}
+	}
+
+	next();
+};
+
 var check_duplicate = function(req, res, next){
 	handler.check_user_exist(req.body.phone, function(count){
 		if(count > 0){
@@ -63,4 +82,5 @@ module.exports = {
 	check_duplicate: check_duplicate,
 	check_user_exist: check_user_exist,
 	check_paramter_lack: check_paramter_lack,
+	verify_boolean: verify_boolean,
 };

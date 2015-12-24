@@ -12,6 +12,21 @@ var Home = require('./model.js').Home;
 var User = require('../account/model.js').User;
 
 /*
+ * change position abbr to position number
+ *
+ */
+
+var change_to_position_code = function(req, res, next){
+	var postion_value = {'father': 4, 'mother': 5, 'gf': 0, 'gm': 1, 'gfl': 2, 'gml':3, 'child':6};
+	if(req.body.invitee_position in postion_value){
+		req.body.invitee_position = postion_value[req.body.invitee_position];
+		next();
+	}else{
+		res.status(400);
+		res.json({error: 'your postion is error'});
+	}
+};
+/*
  * Change id to object.
  *
  */
@@ -71,4 +86,5 @@ var check_relation_acceptable = function(req, res, next){
 module.exports = {
 	check_relation_acceptable: check_relation_acceptable,
 	change_id_to_model: change_id_to_model,
+	change_to_position_code: change_to_position_code,
 };
