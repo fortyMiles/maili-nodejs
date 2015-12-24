@@ -165,21 +165,22 @@ describe('Account Model', function(){
 	describe('#add_contractor()', function(){
 
 		var user = new Model.User(data);
-		user.add_contractor('user_id');
-
-		it('should add a new friend, contract list length should be one', function(done){
-			assert.lengthOf(user.contract, 2);
-			done();
+		it('before add, should have no contractor', function(){
+			assert.lengthOf(user.contract, 0);
 		});
 
-		it('should have defalut relation F', function(done){
+		it('should add a new friend, contract list length should be one', function(){
+			user.add_contractor('user_id');
+			assert.lengthOf(user.contract, 1);
+		});
+
+		it('should have defalut relation F', function(){
 			assert.equal(user.contract[0].relation, 'F');
-			done();
 		});
 
-		user.add_contractor('user_id', 'R');
 
 		it('should add two new friend, contract list length should be two', function(done){
+			user.add_contractor('user_id_2', 'R');
 			assert.lengthOf(user.contract, 2);
 			done();
 		});
@@ -187,6 +188,11 @@ describe('Account Model', function(){
 		it('should have a new relation R', function(done){
 			assert.equal(user.contract[1].relation, 'R');
 			done();
+		});
+
+		it('should not add the same person into his contract list', function(){
+			user.add_contractor('user_id_2', 'R');
+			assert.lengthOf(user.contract, 2);
 		});
 	});
 

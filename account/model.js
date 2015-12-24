@@ -132,6 +132,10 @@ UserSchema.methods.need_create_home= function(current_data){
 	return need;
 };
 
+/*
+ * Static methods for add a person to one person's contractor.
+ *
+ */
 
 /*
  * Add a new person to self's contract list.
@@ -141,13 +145,26 @@ UserSchema.methods.need_create_home= function(current_data){
  */
 
 UserSchema.methods.add_contractor = function(user_id, relation, nickname){
+
 	relation = relation || 'F';
 	nickname = nickname || null;
-	this.contract.push({
-		user_id: user_id,
-		nickname: nickname,
-		relation: relation,
-	});
+
+	var contractor_exist = false;
+
+	for(var i in this.contract){
+		if(this.contract[i].user_id == user_id){
+			contractor_exist = true;
+			break;
+		}
+	}
+
+	if(!contractor_exist){
+		this.contract.push({
+			user_id: user_id,
+			nickname: nickname,
+			relation: relation,
+		});
+	}
 };
 
 /*
@@ -349,7 +366,7 @@ UserSchema.methods.find_self_home = function(new_position){
 
 UserSchema.methods.change_default_home = function(new_home_id, new_home_owner){
 	//this.default_home = home_id;	
-	
+
 	var previous_home_id = this.default_home;
 
 	for(var i in this.home){
