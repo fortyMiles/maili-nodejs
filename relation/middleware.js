@@ -8,6 +8,44 @@
  */
 
 var relation_value = require('./data/relation_value.js');
+var Home = require('./model.js').Home;
+var User = require('../account/model.js').User;
+
+/*
+ * Change id to object.
+ *
+ */
+
+var change_id_to_model = function(model, req, res, next){
+	if(req.locals === undefined){
+		req.locals = {};
+	}
+
+	var target_model = null;
+	var restriction = {};
+
+	if(model == 'home'){
+		target_model = Home;
+		restriction = {home_id: req.body.home_id};
+	}else if(model == 'inviter' || model == 'invitee'){
+		target_model = User;
+		restriction = {phone: req.body[model]};
+	}else{
+		throw(Error('unacceptable model name:' + model));
+	}
+
+	target_model.findOne(restriction, function(err, object){
+		if(err) throw err;
+		if(object){
+			req.locals[model] = object;
+			next();
+		}else{
+			res.status(404);
+			res.json({model: ' this '+ model +' not exist'});
+		}
+	});
+};
+
 /*
  * Check if relation is accepctable.
  *
@@ -23,35 +61,14 @@ var check_relation_acceptable = function(req, res, next){
 		res.json({relation_unacceptable: req.body.relation});
 	}
 };
+
 /*
- * check if content with required paramter format.
- *
- * @api public
+ * Check paramter required.
  *
  */
-var check_parameter = function(req, res, next){
-	var paramters = ['user1_is_male', 'user1_name', 'relation', 'user1', 'user2', 'scope', 'home_id'];
-
-	var lack = false;
-	var lack_paramter = [];
-	paramters.map(function(p){
-		if((p in req.body) === false){
-			lack = true;
-			lack_paramter.push(p);
-		}
-	});
-
-	if(lack){
-		res.status(400);
-		res.json({error: 'lack of paramter: ' + lack_paramter.toString()});
-	}else{
-		next();
-	}
-};
 
 
 module.exports = {
-	check_parameter: check_parameter,
 	check_relation_acceptable: check_relation_acceptable,
+	change_id_to_model: change_id_to_model,
 };
-

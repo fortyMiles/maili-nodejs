@@ -15,58 +15,59 @@ var relation_value = require('./data/relation_value.js');
  *
  * @api public
  */
-var create_relation = function(req, res, next){
+var create_relation = function(req, res){
 
 	var HOME = 'H';
 
-	var data = req.body;
-	var nickname = data.nickname || null;
-	
-	var user_not_exist = false;
+	var inviter = req.locals.inviter;
+	var invitee = req.locals.invitee;
+	var relation = req.body.relation;
+	var scope = req.body.scope;
 
-	user_handler.get_user_by_phone(data.user1, function(user){
-		if(user){
-			user.add_contractor(data.user2, data.relation, nickname);
-		}else{
-			user_not_exist = true;
-		}
+	inviter.add_contractor(invitee.phone, relation, relation);
 
-	});
+	converse_relation = relation_value.get_converse_relation(inviter.is_male(), relation);
 
+	invitee.add_contractor(inviter.phone, converse_relation, inviter.nickname);
 
-	var converse_relation = relation_value.get_converse_relation(data.user1_is_male, data.relation);
-
-	user_handler.get_user_by_phone(data.user2, function(user){
-		if(user){
-			user.add_contractor(data.user1, converse_relation, data.user1_name);
-		}else{
-			user_not_exist = true;
-		}
-	});
-
-	relation_handler.create_new_relation(data);
-
-	// create converse relation.
 	relation_handler.create_new_relation({
-		user1: data.user2,
-		user2: data.user1,
-		relation: converse_relation,
-		scope: data.scope,
+		user1: inviter.phone,
+		user2: invitee.phone,
+		relation: relation,
+		scope: scope,
 	});
 
-	if(user_not_exist){
-		res.status(404);
-		res.json({user_not_exist: 'user1 or user2 is not exist'});
-	}else if(data.scope != HOME){
-		res.status(200);
-		res.json({created: 'success'});
-	}else{
-		relation_handler.add_person_to_a_home(data.home_id, data.user2, function(home){});
-		user_handler.add_home_to_a_person(data.user2, data.home_id, data.user1, converse_relation, function(user){});
-		res.status(200);
-		res.json({created: 'success'});
-		next(); // next() to update_home_member_contract()
+	if(scope == HOME){
+		var home = req.locals.home;
+		var position = req.body.invitee_position;
+		_update_home_info(home, position, invitee.phone);
+
+		if(invitee.find_self_home(position)){
+			invitee.change_default_home(home.home_id, home.owner);
+		}else{
+			invitee.add_a_home(home.home_id, home.owner, converse_relation);
+		}
+
+		invitee.save();
 	}
+
+	res.status(200);
+	res.json({created: 'success'});
+};
+
+/*
+ * Update Home info
+ *
+ * @param {Model} home
+ * @param {Number} new person position.
+ * @param {String} user_phone_number
+ * @api private
+ */
+
+var _update_home_info = function(home, position, user_phone_number){
+	home.add_member(user_phone_number, position);
+	home.update_home_owner();
+	home.save();
 };
 
 /*

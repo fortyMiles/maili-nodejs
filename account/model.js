@@ -330,6 +330,40 @@ UserSchema.methods.create_new_home = function(){
 	this.add_a_home(this.default_home, this.phone);
 };
 /*
+ * Find self home. 
+ * Judge if this home which inviting her/his is his self belonging home.
+ *
+ * @param {String} invitee_home_position.
+ */
+
+UserSchema.methods.find_self_home = function(new_position){
+	return Number(this.default_home_position) == Number(new_position);
+};
+
+/*
+ * Change defalut home.
+ *
+ * When a 'small home member' invites his/her to a home. This person should change a default home.
+ *
+ */
+
+UserSchema.methods.change_default_home = function(new_home_id, new_home_owner){
+	//this.default_home = home_id;	
+	
+	var previous_home_id = this.default_home;
+
+	for(var i in this.home){
+		if(this.home[i].home_id == previous_home_id){
+			this.home[i].home_id = new_home_id;
+			this.home[i].home_nickname = '我的小家';
+			this.home[i].home_owner = new_home_owner;
+		}
+	}
+
+	this.default_home = new_home_id;
+};
+
+/*
  * Create a new 'table'.
  *
  */

@@ -32,11 +32,12 @@ var HomeSchema = new Schema({
 
 HomeSchema.methods.update_home_owner = function(){
 	var HOST = 4;
+
 	this.member.map(function(user){
 		if(user.position == HOST){
 			this.owner = user.username;
 		}
-	});
+	}, this);
 };
 /*
  * Create a new home by defalut home and position.

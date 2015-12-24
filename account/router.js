@@ -10,6 +10,7 @@ var express = require('express');
 var router = express.Router();
 var controller = require('./controller.js');
 var middleware = require('./middleware.js');
+var _ = require('ramda');
 
 router.use(function(req, res, next){
 	console.log('check token');
@@ -18,17 +19,19 @@ router.use(function(req, res, next){
 
 router.route('/user/')
 .post(
-	middleware.check_register_paramter_lack,
+	_.curry(middleware.check_paramter_lack)(['phone', 'password']),
 	middleware.check_duplicate,
 	controller.create_user
 )
 .put(
-	middleware.check_update_paramter_lack,
+	_.curry(middleware.check_paramter_lack)(['phone']),
 	middleware.check_user_exist,
 	controller.update_user
 );
 
-router.get('/info/:username', controller.get_user_information);
+router.get('/info/:username', 
+		   middleware.check_user_exist,
+		   controller.get_user_information);
 router.get('/exist/:username', controller.check_user_exist);
 router.get('/home_list/:user_phone', controller.get_home_list);
 

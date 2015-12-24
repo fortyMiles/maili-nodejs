@@ -10,6 +10,8 @@ var express = require('express');
 var router = express.Router();
 var controller = require('./controller.js');
 var middleware = require('./middleware.js');
+var account_middleware = require('../account/middleware.js');
+var _ = require('ramda');
 
 router.use(function(req, res, next){
 	console.log('check token');
@@ -17,8 +19,10 @@ router.use(function(req, res, next){
 });
 
 router.post('/create/', 
-			middleware.check_parameter, 
-			middleware.check_relation_acceptable,
+			_.curry(account_middleware.check_paramter_lack)(['inviter', 'invitee', 'home_id', 'invitee_position', 'relation', 'scope']),
+			_.curry(middleware.change_id_to_model)('home'),
+			_.curry(middleware.change_id_to_model)('inviter'),
+			_.curry(middleware.change_id_to_model)('invitee'),
 			controller.create_relation);
 
 router.get('/contract/:username', controller.get_contract);
