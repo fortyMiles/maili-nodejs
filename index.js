@@ -15,8 +15,10 @@ var relation_router = require('./relation/router.js');
 app.use(body_parse.urlencoded({ extended: false }));
 app.use(body_parse.json());
 
+app.use('/home/', relation_router);
 app.use('/account/',  account_router);
 app.use('/relation/', relation_router);
+app.use('/feed/', account_router);
 
 var server = app.listen(3000, function(){
 	var host = server.address().address;
@@ -24,3 +26,7 @@ var server = app.listen(3000, function(){
 
 	console.log('Listring on http://%s:%s', host, port);
 });
+
+module.exports = {
+	app: app,
+};

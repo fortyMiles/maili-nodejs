@@ -32,13 +32,27 @@ router.route('/user/')
 );
 
 router.get('/info/:username', 
-		   middleware.check_user_exist,
 		   controller.get_user_information);
 router.get('/exist/:username', controller.check_user_exist);
-router.get('/home_list/:user_phone', controller.get_home_list);
+router.get('/home_list/:user_phone', 
+		   middleware.check_user_exist_by_params,
+		   controller.get_home_list);
 
 
-router.post('/login/', controller.login_user);
+router.post('/login/', 
+			controller.login_user
+		   );
 router.post('/captcha/', controller.get_captcha);
+
+router.get('/contract/:user_phone',
+		   middleware.check_user_exist_by_params,
+		   controller.get_contract_list);
+
+//router.get('/relation_id/:username', controller.get_relation_id);
+//router.get('/friend_id/:username', controller.get_friend_id);
+
+router.get('/scope/:user_phone', 
+		   middleware.check_user_exist_by_params,
+		   controller.get_feed_scope);
 
 module.exports = router;

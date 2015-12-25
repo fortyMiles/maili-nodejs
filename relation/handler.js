@@ -37,7 +37,7 @@ var relation_accept = relation_dic.relation_accept;
  */
 
 var get_home_by_id = function(home_id, callback){
-	Home.findOne({home_id: home_id}, function(err,  home){
+	Home.findOne({home_id: home_id},'-_id -__v', function(err,  home){
 		if(err) throw err;
 		callback(home);
 	});

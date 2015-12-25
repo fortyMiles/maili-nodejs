@@ -30,10 +30,10 @@ router.post('/create/',
 router.get('/contract/:username', controller.get_contract);
 
 router.get('/home_member/:username', controller.get_home_member);
-router.get('/home_id/:username', controller.get_home_id);
 router.get('/relation_id/:username', controller.get_relation_id);
 router.get('/friend_id/:username', controller.get_friend_id);
 router.get('/home_creator/:home_id', controller.get_home_creator);
 router.get('/info/:user1/:user2/', controller.get_realtion_info);
+router.get('/:home_id', controller.get_home_info);
 
 module.exports = router;

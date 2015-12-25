@@ -97,13 +97,10 @@ var _create_home_by_user = function(user){
 var login_user = function(req, res, next){
 	var user_phone = req.body.phone;
 	var password = req.body.password;
-	handler.login(user_phone, password, function(user){
+	handler.login(user_phone, password, function(token){
 		if(user){
 			res.status(201);
-			res.json({
-				token: user.current_session_token,
-				data: user
-			});
+			res.json({token: token});
 		}else{
 			res.status(406);
 			res.json({error: 'account or password error'});
@@ -143,31 +140,6 @@ var get_home_list = function(req, res, next){
 	});
 };
 
-/*
- * Get contract list
- */
-
-var get_contract_list = function(req, res, next){
-	handler.get_user_by_phone(req.params.user_phone, function(user){
-		res.status(200);
-		res.json({data: user.contract});
-	});
-};
-
-var get_home_info = function(req, res, next){
-	handler.get_home_info(req.params.home_id, function(home){
-		res.status(200);
-		res.json({data: home});
-	});
-};
-
-var get_feed_scope = function(req, res, next){
-	handler.get_user_by_phone(req.params.user_phone, function(user){
-		res.status(200);
-		res.json({data:user.feed_group});
-	});
-};
-
 module.exports = {
 	get_user_information: get_user_information,
 	check_user_exist: check_user_exist,
@@ -176,7 +148,4 @@ module.exports = {
 	login_user: login_user,
 	get_captcha: get_captcha,
 	get_home_list: get_home_list,
-	get_contract_list: get_contract_list,
-	get_home_info: get_home_info,
-	get_feed_scope: get_feed_scope,
 };

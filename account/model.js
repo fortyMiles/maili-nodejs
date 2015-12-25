@@ -15,7 +15,6 @@ Array.prototype.inArray = function(comparer){
 	for(var i=0; i < this.length; i++) { 
 		if(comparer(this[i])) 
 			{
-				throw(Error('find a existed!'));
 				return true; 
 			}
 	}
@@ -44,6 +43,7 @@ var UserSchema = new Schema({
 	default_home: String, //everyone has a initial home.
 	current_session_token: String, // current session token. Every time login or register, will give a token back to him.
 	default_home_position: {type: Number, default: 4},
+	friend_number: {type: Number, default:0},
 
 	contract:[{ // a person's all contracts.
 		user_id:String,
@@ -189,7 +189,10 @@ UserSchema.methods.add_contractor = function(user_id, relation, nickname){
 
 	if(!(user_id in this._contract_mapper)){
 		this._contract_mapper[user_id] = true;
+		this.friend_number ++;
 	}
+
+	this.contract = this.contract.sort().slice(0, this.friend_number);
 };
 
 /*

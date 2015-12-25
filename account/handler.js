@@ -78,12 +78,14 @@ var update_user = function(data, need_new_home, callback){
 };
 
 var login = function(username, password, callback){
-	UserModel.findOne({phone: username, password: password},function(err, user){
+	UserModel.findOne({phone: username, password: password},'-_id -__v -password', function(err, user){
+		if(err) throw err;
+		callback(user);
 		if(user){
 			user.login();
 			user.generate_session_code();
 			user.save();
-			callback(user.current_session_token);
+			callback(user);
 		}
 	});
 };
@@ -116,6 +118,11 @@ var add_home_to_a_person = function(username, home_id, home_owner, relation, cal
 var add_user_to_a_user_contractor = function(user_id, new_user_id, relation, nickname){
 	UserModel.add_contractor_to_a_person(user_id, new_user_id, relation, nickname);
 };
+
+/*
+ * Get home info
+ *
+ */
 
 module.exports = {
 	create_new_user: create_new_user,
