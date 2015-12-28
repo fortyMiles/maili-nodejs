@@ -99,9 +99,10 @@ var _update_home_info = function(home, position, user_phone_number){
  * @param {Model} new_user relation_starter is new user;
  * @param {Int} new_user_position relation receiver is previous home member.
  * @param {Json} home_member is find from home member list, it's a json.
+ * @param {Function} notification for create new relation.
  */
 
-var _connect_two_person = function(new_user, new_user_position, exist_member){
+var _connect_two_person = function(new_user, new_user_position, exist_member, notification){
 
 	var home_member_position = Number(exist_member.position);
 
@@ -116,11 +117,21 @@ var _connect_two_person = function(new_user, new_user_position, exist_member){
 		new_user.add_contractor(previous_member.phone, relation_user_call_member, previous_member.nickname);
 		console.log(new_user.phone + ' add ' + relation_user_call_member + ' :' + previous_member.phone);
 
-		new_user.save();
-		previous_member.save();
+		new_user.save().then(function(){
+			notification(new_user.phone, relation_user_call_member, previous_member.phone);
+		});
 
+		previous_member.save(function(){
+			notification(previous_member.phone, relation_member_call_user, new_user.phone);
+		});
 	});
 };
+
+/*
+ * Notification to Socket io that creat a new relation.
+ *
+ */
+
 
 var add_person_to_home = function(user1, user2, home_id){
 	//relation_handler.every_member_add_person_to_contract(home_id, req.body.user2);
