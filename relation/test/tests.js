@@ -19,9 +19,10 @@ var Relation = require('../model.js').Relation;
 var Home = require('../model.js').Home;
 var User = require('../../account/model.js').User;
 var chai = require('chai');
+var notification = require('../notification.js');
 
 var assert = chai.assert;
-
+/*
 describe('Home Model', function(){
 	var home_info = {
 		home_id: '001',
@@ -81,7 +82,8 @@ describe('Relation Model', function(){
 		it('should add a person to a home member list', function(done){
 			var person = '11111';
 			var home_id = 'home_id';
-			Home.add_person_to_a_home(home_id, person, function(home){
+			var home_position = 1;
+			Home.add_person_to_a_home(home_id, person, home_position, function(home){
 				assert.isNotNull(home);
 				assert.lengthOf(home.member, 1);
 				done();
@@ -121,4 +123,15 @@ describe('Relation Handler', function(){
 	});
 	
 });
+*/
 
+describe('Relation Notification', function(){
+	describe('#notification()', function(){
+		it('should no exception', function(){
+			var receiver = 'receiver';
+			var friend = 'friend';
+			var relation = 'relation';
+			notification.notification(receiver, friend, relation);
+		});
+	});
+});

@@ -9,6 +9,7 @@
 var user_handler = require('../account/handler.js');
 var relation_handler = require('./handler.js');
 var relation_value = require('./data/relation_value.js');
+var notification = require('./notification.js').notification;
 var _ = require('ramda');
 
 /*
@@ -39,7 +40,7 @@ var create_relation = function(req, res, next){
 		var home = req.locals.home;
 		var position = req.body.invitee_position;
 
-		var connect_home_member_with_new_user = _.curry(_connect_two_person)(invitee)(position);
+		var connect_home_member_with_new_user = _.curry(_connect_two_person)(invitee)(position)(notification);
 
 		for(var i = 0; i < home.member.length; i++){
 			if(home.member[i].username == invitee.phone){
@@ -56,7 +57,6 @@ var create_relation = function(req, res, next){
 		}
 		invitee.save();
 
-		next();
 	}else{
 		inviter.add_contractor(invitee.phone, relation, relation);
 		invitee.add_contractor(inviter.phone, converse_relation, inviter.nickname);
@@ -64,6 +64,7 @@ var create_relation = function(req, res, next){
 
 	res.status(200);
 	res.json({created: 'success'});
+	next();
 };
 
 /*
@@ -102,7 +103,7 @@ var _update_home_info = function(home, position, user_phone_number){
  * @param {Function} notification for create new relation.
  */
 
-var _connect_two_person = function(new_user, new_user_position, exist_member, notification){
+var _connect_two_person = function(new_user, new_user_position, notification, exist_member){
 
 	var home_member_position = Number(exist_member.position);
 
@@ -111,18 +112,16 @@ var _connect_two_person = function(new_user, new_user_position, exist_member, no
 
 		previous_member.add_contractor(new_user.phone, relation_member_call_user, new_user.nickname);
 		// home member add new user to his contract.
-		console.log(previous_member.phone + ' add ' + relation_member_call_user + ' : ' + new_user.phone);
 
 		var relation_user_call_member = relation_value.get_title(new_user_position, home_member_position, previous_member.is_male());
 		new_user.add_contractor(previous_member.phone, relation_user_call_member, previous_member.nickname);
-		console.log(new_user.phone + ' add ' + relation_user_call_member + ' :' + previous_member.phone);
 
 		new_user.save().then(function(){
-			notification(new_user.phone, relation_user_call_member, previous_member.phone);
+			notification(new_user.phone, previous_member.phone, relation_user_call_member);
 		});
 
 		previous_member.save(function(){
-			notification(previous_member.phone, relation_member_call_user, new_user.phone);
+			notification(previous_member.phone, new_user.phone, relation_member_call_user);
 		});
 	});
 };
@@ -130,8 +129,15 @@ var _connect_two_person = function(new_user, new_user_position, exist_member, no
 /*
  * Notification to Socket io that creat a new relation.
  *
+ * @param {String} Notification receiver;
+ * @param {String} New friend
+ * @param {String} Relation Name
+ *
  */
 
+var _notification = function(receiver, friend, relation){
+	console.log(receiver + ' add '  + relation  + ' ' + friend);
+};
 
 var add_person_to_home = function(user1, user2, home_id){
 	//relation_handler.every_member_add_person_to_contract(home_id, req.body.user2);
