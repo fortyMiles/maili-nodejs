@@ -319,7 +319,7 @@ UserSchema.methods.add_a_home = function(home_id, home_owner, relation){
 
 	this.home.push({
 		home_id: home_id,
-		home_nickname: null,
+		home_nickname: "",
 		home_owner: home_owner,
 		home_relation: relation,
 	});
