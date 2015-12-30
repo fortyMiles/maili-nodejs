@@ -23,6 +23,7 @@ var HomeSchema = new Schema({
 	}],
 	name: {type: String, default: null},
 	slogen: {type: String, default: null},
+	avatar: {type: String, default: "2211f3027e6e682361c552cd6c721e08.png"}
 });
 
 /*
