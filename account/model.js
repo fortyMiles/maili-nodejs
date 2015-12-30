@@ -318,8 +318,8 @@ UserSchema.methods.add_a_home = function(home_id, home_owner, relation){
 	relation = relation || 'self';
 
 	this.home.push({
-		id: home_id,
-		nickname: null,
+		home_id: home_id,
+		home_nickname: null,
 		home_owner: home_owner,
 		home_relation: relation,
 	});
@@ -398,8 +398,8 @@ UserSchema.methods.change_default_home = function(new_home_id, new_home_owner){
 	var previous_home_id = this.default_home;
 
 	for(var i in this.home){
-		if(this.home[i].id == previous_home_id){
-			this.home[i].id = new_home_id;
+		if(this.home[i].home_id == previous_home_id){
+			this.home[i].home_id = new_home_id;
 			this.home[i].nickname = '我的小家';
 			this.home[i].home_owner = new_home_owner;
 		}
