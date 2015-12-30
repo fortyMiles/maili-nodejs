@@ -91,7 +91,7 @@ var login = function(username, password, callback){
 };
 
 var get_user_information = function(username, callback){
-	UserModel.findOne({phone: username}, '-_id first_name avatar nickname marital_status gender', function(err, user){
+	UserModel.findOne({phone: username}, '-_id -__v -password', function(err, user){
 		if(err) throw err;
 		callback(user);
 	});
