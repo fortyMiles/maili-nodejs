@@ -33,11 +33,11 @@ var UserSchema = new Schema({
 	password: {type: String, select: false},
 	phone: String,
 	gender: {type: String, enum: ['F', 'M', 'U'], default: 'U'},
-	marital_status: {type: Boolean, default: null},
-	nickname: {type: String, default: null},
+	marital_status: {type: Boolean, default: ""},
+	nickname: {type: String, default: ""},
 	is_login: {type: Boolean, default: false},
 	tagline: String, // Self description.
-	avatar: {type: String, default: null}, // Avatar url,
+	avatar: {type: String, default: ""}, // Avatar url,
 	last_login_date: Date,
 	register_date: {type: Date, default: Date.now},
 	default_home: String, //everyone has a initial home.
@@ -47,7 +47,7 @@ var UserSchema = new Schema({
 
 	contact:[{ // a person's all contracts.
 		user_id:String,
-		nickname: {type: String, default: null},
+		nickname: {type: String, default: ""},
 		relation: {type: String, default: 'F'},
 	}],
 
@@ -60,7 +60,7 @@ var UserSchema = new Schema({
 
 	home:[{ // a person joined home.
 		home_id: String,
-		home_nickname: String,
+		home_nickname: {type: String, default: ""},
 		home_owner: String,
 		home_relation: String, // Relation with self and home owner.
 	}],
@@ -71,7 +71,7 @@ UserSchema.methods.is_single = function(){
 };
 
 UserSchema.methods.marital_status_unknow = function(){
-	return this.marital_status === null || this.marital_status === undefined;
+	return this.marital_status === null || this.marital_status === undefined || this.marital_status === "";
 };
 
 UserSchema.methods.gender_unknow = function(){
@@ -173,7 +173,7 @@ UserSchema.statics.add_contractor_to_a_person = function(user_id, new_user_id, r
 UserSchema.methods.add_contractor = function(user_id, relation, nickname){
 
 	relation = relation || 'F';
-	nickname = nickname || null;
+	nickname = nickname || "";
 
 	var contractor_exist = false;
 
