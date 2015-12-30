@@ -19,7 +19,7 @@ var assert = require('assert');
  * @param {Function} callback of user object.
  */
 var get_user_by_phone = function(user_phone, callback){
-	UserModel.findOne({phone: user_phone}, function(err, user){
+	UserModel.findOne({phone: user_phone},  function(err, user){
 		if(err) throw err;
 		callback(user);
 	});
@@ -36,7 +36,7 @@ var get_user_by_phone = function(user_phone, callback){
  */
 
 var get_user_joined_home = function(user_phone, callback){
-	UserModel.findOne({phone: user_phone}, function(err, user){
+	UserModel.findOne({phone: user_phone},'-home._id', function(err, user){
 		if(err) throw err;
 		callback(user.home);
 	});
