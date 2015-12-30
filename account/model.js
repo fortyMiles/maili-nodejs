@@ -29,7 +29,7 @@ Array.prototype.pushIfNotExist = function(element, comparer) {
 
 var UserSchema = new Schema({
 	user_id: String, // user unique code.
-	first_name: String, 
+	last_name: String, 
 	password: {type: String, select: false},
 	phone: String,
 	gender: {type: String, enum: ['F', 'M', 'U'], default: 'U'},
