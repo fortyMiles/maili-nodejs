@@ -22,7 +22,7 @@ var HomeSchema = new Schema({
 		//location: [],
 	}],
 	name: {type: String, default: ""},
-	slogen: {type: String, default: ""},
+	slogan: {type: String, default: ""},
 	avatar: {type: String, default: "2211f3027e6e682361c552cd6c721e08.png"}
 });
 
