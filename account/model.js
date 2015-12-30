@@ -59,11 +59,10 @@ var UserSchema = new Schema({
 	}],
 
 	home:[{ // a person joined home.
-		id: String,
-		nickname: String,
+		home_id: String,
+		home_nickname: String,
 		home_owner: String,
 		home_relation: String, // Relation with self and home owner.
-		avatar: {type: String, defalut: "2211f3027e6e682361c552cd6c721e08.png"},
 	}],
 });
 
