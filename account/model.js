@@ -45,7 +45,7 @@ var UserSchema = new Schema({
 	default_home_position: {type: Number, default: 4},
 	friend_number: {type: Number, default:0},
 
-	contract:[{ // a person's all contracts.
+	contact:[{ // a person's all contracts.
 		user_id:String,
 		nickname: {type: String, default: null},
 		relation: {type: String, default: 'F'},
