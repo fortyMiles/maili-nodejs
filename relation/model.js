@@ -17,7 +17,7 @@ var HomeSchema = new Schema({
 	owner: String,
 	create_time: {type: Date, default: Date.now},
 	member:[{
-		username: {type: String, ref: 'User'},
+		user: {type: Object, ref: 'User'},
 		position: Number,
 		//location: [],
 	}],
@@ -50,13 +50,13 @@ HomeSchema.methods.update_home_owner = function(){
  *
  */
 
-HomeSchema.statics.create_home = function(home_id, creator_id, creator_position, callback){
+HomeSchema.statics.create_home = function(home_id, creator, creator_position, callback){
 	var home_data = {
 		home_id: home_id,
-		creator: creator_id,
+		creator: creator.user_id,
 		member:[{
-			owner: creator_id,
-			username: creator_id,
+			owner: creator.user_id,
+			user: creator,
 			position: creator_position,
 		}],
 	};
@@ -87,11 +87,11 @@ HomeSchema.statics.create_home = function(home_id, creator_id, creator_position,
  * @param {String} user_phone_number
  */
 
-HomeSchema.statics.add_person_to_a_home = function(home_id, user_id, position, callback){
+HomeSchema.statics.add_person_to_a_home = function(home_id, user, position, callback){
 	this.findOne({home_id: home_id}, function(err, home){
 		if(err) throw err;
 		if(home){
-			home.add_member(user_id, Number(position));
+			home.add_member(user, Number(position));
 			home.save();
 		}
 		callback(home);
@@ -100,12 +100,12 @@ HomeSchema.statics.add_person_to_a_home = function(home_id, user_id, position, c
 /*
  * Add a member to self member list.
  *
- * @param {String} the user's object id;
+ * @param {Object} the user
  *
  */
-HomeSchema.methods.add_member = function(user_id, position){
+HomeSchema.methods.add_member = function(user, position){
 	this.member.push({
-		username: user_id,
+		user: user,
 		position: Number(position),
 	});
 };

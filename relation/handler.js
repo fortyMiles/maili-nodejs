@@ -37,8 +37,10 @@ var relation_accept = relation_dic.relation_accept;
  */
 
 var get_home_by_id = function(home_id, callback){
-	Home.findOne({home_id: home_id},'-_id -__v', function(err,  home){
+	Home.findOne({home_id: home_id},
+				 '-_id -member.user.password -member.user.friend_number -member.user.contact -member.user.feed_group -member.user.home -member.user.current_session_token', function(err,  home){
 		if(err) throw err;
+
 		callback(home);
 	});
 };
@@ -55,8 +57,8 @@ var get_home_by_id = function(home_id, callback){
  *
  */
 
-var create_home = function(home_id, creator_id, creator_position, callback){
-	Home.create_home(home_id, creator_id, creator_position,callback);
+var create_home = function(home_id, creator, creator_position, callback){
+	Home.create_home(home_id, creator, creator_position,callback);
 };
 
 /*
@@ -130,5 +132,4 @@ module.exports = {
 	get_home_by_id: get_home_by_id,
 	add_person_to_a_home: add_person_to_a_home,
 	check_home_exist: check_home_exist,
-	
 };

@@ -76,7 +76,7 @@ var add_invitee_to_home = function(req, res, next){
 	var position = req.body.invitee_position;
 	var invitee = req.locals.invitee;
 
-	_update_home_info(home, position, invitee.user_id);
+	_update_home_info(home, position, invitee);
 };
 /*
  * Update Home info
@@ -87,8 +87,8 @@ var add_invitee_to_home = function(req, res, next){
  * @api private
  */
 
-var _update_home_info = function(home, position, user_id){
-	home.add_member(user_id, position);
+var _update_home_info = function(home, position, user){
+	home.add_member(user, position);
 	home.update_home_owner();
 	home.save();
 };
