@@ -17,12 +17,12 @@ var HomeSchema = new Schema({
 	owner: String,
 	create_time: {type: Date, default: Date.now},
 	member:[{
-		username: String,
+		username: {type: String, ref: 'User'},
 		position: Number,
 		//location: [],
 	}],
-	name: {type: String, default: null},
-	slogen: {type: String, default: null},
+	name: {type: String, default: ""},
+	slogen: {type: String, default: ""},
 	avatar: {type: String, default: "2211f3027e6e682361c552cd6c721e08.png"}
 });
 
