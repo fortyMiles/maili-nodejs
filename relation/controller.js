@@ -76,7 +76,7 @@ var add_invitee_to_home = function(req, res, next){
 	var position = req.body.invitee_position;
 	var invitee = req.locals.invitee;
 
-	_update_home_info(home, position, invitee.phone);
+	_update_home_info(home, position, invitee.user_id);
 };
 /*
  * Update Home info
@@ -87,8 +87,8 @@ var add_invitee_to_home = function(req, res, next){
  * @api private
  */
 
-var _update_home_info = function(home, position, user_phone_number){
-	home.add_member(user_phone_number, position);
+var _update_home_info = function(home, position, user_id){
+	home.add_member(user_id, position);
 	home.update_home_owner();
 	home.save();
 };
@@ -107,7 +107,7 @@ var _connect_two_person = function(new_user, new_user_position, notification, ex
 
 	var home_member_position = Number(exist_member.position);
 
-	user_handler.get_user_by_phone(exist_member.username, function(previous_member){
+	user_handler.get_user_by_id(exist_member.username, function(previous_member){
 		var relation_member_call_user = relation_value.get_title(home_member_position, new_user_position, new_user.is_male());
 
 		previous_member.add_contractor(new_user.phone, relation_member_call_user, new_user.nickname);

@@ -86,7 +86,7 @@ var _create_home_by_user = function(user){
 	if(user){
 		relation_handler.create_home(
 			user.default_home, 
-			user.phone,  // this is set to user phone. But should be user.user_id.
+			user.user_id,  // this is set to user phone. But should be user.user_id.
 			user.default_home_position, 
 			function(home){}
 		);

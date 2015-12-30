@@ -25,6 +25,16 @@ var get_user_by_phone = function(user_phone, callback){
 	});
 };
 
+/*
+ * Get user by id
+ */
+
+var get_user_by_id = function(user_id, callback){
+	UserModel.findOne({user_id: user_id},  function(err, user){
+		if(err) throw err;
+		callback(user);
+	});
+};
 
 /*
  * Get user joined home.
@@ -131,6 +141,7 @@ module.exports = {
 	login: login,
 	get_user_information: get_user_information,
 	get_user_by_phone: get_user_by_phone,
+	get_user_by_id: get_user_by_id,
 	get_user_joined_home: get_user_joined_home,
 	add_home_to_a_person: add_home_to_a_person,
 	user_need_create_home: user_need_create_home,
