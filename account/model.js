@@ -28,6 +28,7 @@ Array.prototype.pushIfNotExist = function(element, comparer) {
 }; 
 
 var UserSchema = new Schema({
+	_id: String,
 	user_id: String, // user unique code.
 	last_name: String, 
 	password: {type: String, select: false},
@@ -35,15 +36,15 @@ var UserSchema = new Schema({
 	gender: {type: String, enum: ['F', 'M', 'U'], default: 'U'},
 	marital_status: {type: Boolean, default: ""},
 	nickname: {type: String, default: ""},
-	is_login: {type: Boolean, default: false},
+	is_login: {type: Boolean, default: false, select: false},
 	tagline: String, // Self description.
 	avatar: {type: String, default: ""}, // Avatar url,
-	last_login_date: Date,
-	register_date: {type: Date, default: Date.now},
-	default_home: String, //everyone has a initial home.
+	last_login_date: {type: Date, select: false},
+	register_date: {type: Date, default: Date.now, select: false},
+	default_home: {type: String, select: false}, //everyone has a initial home.
 	current_session_token: String, // current session token. Every time login or register, will give a token back to him.
-	default_home_position: {type: Number, default: 4},
-	friend_number: {type: Number, default:0},
+	default_home_position: {type: Number, default: 4, select: false},
+	friend_number: {type: Number, default:0, select: false},
 
 	contact:[{ // a person's all contracts.
 		user_id:String,

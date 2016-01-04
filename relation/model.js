@@ -13,11 +13,11 @@ var relation_value = require('./data/relation_value.js');
 
 var HomeSchema = new Schema({
 	home_id: String,
-	creator: String,
+	creator: {type: String, ref: 'User'},
 	owner: String,
 	create_time: {type: Date, default: Date.now},
 	member:[{
-		user: {type: Object, ref: 'User'},
+		user_id: {type: String, ref: 'User'},
 		position: Number,
 		//location: [],
 	}],
@@ -53,10 +53,10 @@ HomeSchema.methods.update_home_owner = function(){
 HomeSchema.statics.create_home = function(home_id, creator, creator_position, callback){
 	var home_data = {
 		home_id: home_id,
-		creator: creator.user_id,
+		creator: creator._id,
+		owner: creator.user_id,
 		member:[{
-			owner: creator.user_id,
-			user: creator,
+			user_id: creator._id,
 			position: creator_position,
 		}],
 	};
@@ -105,7 +105,7 @@ HomeSchema.statics.add_person_to_a_home = function(home_id, user, position, call
  */
 HomeSchema.methods.add_member = function(user, position){
 	this.member.push({
-		user: user,
+		user_id: user._id,
 		position: Number(position),
 	});
 };

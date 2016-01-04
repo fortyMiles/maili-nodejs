@@ -70,6 +70,7 @@ var create_new_user = function(data, callback){
 
 	user.initiate();
 	user.generate_session_code();
+	user._id = user.user_id;
 
 	user.save(function(err, user){
 		if(callback) callback(user);
