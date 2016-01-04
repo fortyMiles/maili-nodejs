@@ -11,9 +11,9 @@ var relation_handler = require('../relation/handler.js');
 var _ = require('ramda');
 
 var get_user_information = function(req, res, next){
-	var user_phone = req.params.username;
+	var user_id = req.params.user_id;
 	
-	handler.get_user_information(user_phone,function(user){
+	handler.get_user_information(user_id,function(user){
 		if(user){
 			res.status(200);
 			res.json({data: user});

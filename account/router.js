@@ -31,7 +31,7 @@ router.route('/user/')
 	controller.update_user
 );
 
-router.get('/info/:username', 
+router.get('/info/:user_id', 
 		   controller.get_user_information);
 router.get('/exist/:username', controller.check_user_exist);
 router.get('/home_list/:user_phone', 

@@ -90,18 +90,17 @@ var update_user = function(data, need_new_home, callback){
 var login = function(username, password, callback){
 	UserModel.findOne({phone: username, password: password},'-_id -__v -password', function(err, user){
 		if(err) throw err;
-		callback(user);
 		if(user){
 			user.login();
 			user.generate_session_code();
 			user.save();
-			callback(user);
 		}
+		callback(user);
 	});
 };
 
-var get_user_information = function(username, callback){
-	UserModel.findOne({phone: username}, '-_id -__v -password', function(err, user){
+var get_user_information = function(user_id, callback){
+	UserModel.findOne({user_id: user_id}, '-_id -__v -password', function(err, user){
 		if(err) throw err;
 		callback(user);
 	});
