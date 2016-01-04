@@ -337,8 +337,8 @@ var _generate_random_int = function(min, max){
 };
 
 UserSchema.methods.generate_session_code = function(){
-	var number = Number(this.phone);
-	var length_min = 2, length_max = 5;
+	var number = Number(this.user_id);
+	var length_min = 2, length_max = 2;
 	var length = _generate_random_int(length_min, length_max);
 	var min = Math.pow(10, length - 1);  
 	// if length = 2, mean random number length is 2
