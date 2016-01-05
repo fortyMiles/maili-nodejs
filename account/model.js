@@ -31,6 +31,7 @@ var UserSchema = new Schema({
 	_id: String,
 	user_id: String, // user unique code.
 	last_name: String, 
+	first_name: {type: String, default: ""},
 	password: {type: String, select: false},
 	phone: String,
 	gender: {type: String, enum: ['F', 'M', 'U'], default: 'U'},
@@ -65,6 +66,10 @@ var UserSchema = new Schema({
 		home_owner: String,
 		home_relation: String, // Relation with self and home owner.
 	}],
+});
+
+UserSchema.virtual('name').get(function(){
+	return this.last_name + this.first_name;
 });
 
 UserSchema.methods.is_single = function(){

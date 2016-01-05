@@ -176,7 +176,10 @@ var add_invitee_to_home = function(req, res, next){
 	home.save();
 
 	res.status(200);
-	res.json({data: req.locals.result_array});
+	res.json({
+		relation: req.locals.result_array,
+		home_id: home.home_id
+	});
 };
 
 /*
@@ -211,8 +214,22 @@ var _connect_two_person = function(new_user, new_user_position, exist_member, ca
 		});
 
 		var relation = {
-			receiver: new_user.user_id,
-			friend: previous_member.user_id,
+			receiver: {
+				user_id: new_user.user_id,
+				name: new_user.name,
+				avatar: new_user.gender,
+				marital_status: new_user.marital_status,
+				phone: new_user.phone,
+			},
+
+			friend: {
+				user_id: previous_member.user_id,
+				name: previous_member.name,
+				avatar: previous_member.gender,
+				marital_status: previous_member.marital_status,
+				phone: previous_member.phone,
+			},
+
 			relation: relation_user_call_member,
 			converse_relation: relation_member_call_user
 		};
