@@ -27,14 +27,15 @@ var get_user_information = function(req, res, next){
 
 
 var check_user_exist = function(req, res, next){
-	handler.check_user_exist(req.params.username, function(count){
-		console.log(count);
-		if(count === 0){
-			res.status(200);
-			res.json({exist: false});
+	handler.get_user_by_phone(req.params.username, function(user){
+		res.status(200);
+		if(user){
+			res.json({
+				exist: true,
+				user_id: user.user_id,
+			});
 		}else{
-			res.status(200);
-			res.json({exist: true});
+			res.json({exist: false});
 		}
 	});
 };

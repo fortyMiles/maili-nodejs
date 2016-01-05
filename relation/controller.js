@@ -105,6 +105,7 @@ var create_relation = function(req, res, next){
 
 		var invitee_position = req.body.invitee_position;
 
+
 		// get relation bewteen inviter and invitee.
 		inviter_call_invitee = caculate_inviter_and_invitee_relationship(inviter, invitee, invitee_position, home);
 		invitee_call_inviter = relation_value.get_converse_relation(inviter.is_male(), inviter_call_invitee);
@@ -128,14 +129,13 @@ var create_relation = function(req, res, next){
 		// connect each person in group with invitee.
 		var connect_home_member_with_new_user = _.curry(_connect_two_person)(invitee)(invitee_position);
 
-		var result_array = [];
-
+		req.locals.result_array = [];
 		for(var index = 0; index < home.member.length; index++){
 			if(home.member[index].user_id == invitee.user_id){
 				continue;
 			}
 			
-			var _add_relation_to_result = _.curry(_add_result)(result_array, req, index, home.member.length - 1, next);
+			var _add_relation_to_result = _.curry(_add_result)(req, index, home.member.length - 1, next);
 			connect_home_member_with_new_user(home.member[index], _add_relation_to_result);
 		}
 	}else if(scope == RELATION){
@@ -143,9 +143,6 @@ var create_relation = function(req, res, next){
 		invitee_call_inviter = relation_value.get_converse_relation(inviter.is_male(), relation);
 		inviter.add_contractor(invitee.user_id, inviter_call_invitee, invitee.nickname);
 		invitee.add_contractor(inviter.user_id, invitee_call_inviter, inviter.nickname);
-	}else{
-		res.status(400);
-		res.json({error:'scope unacceptable'});
 	}
 };
 
@@ -154,10 +151,10 @@ var create_relation = function(req, res, next){
  *
  */
 
-var _add_result = function(result_array, req, index, max_index, next, relation){
-	result_array.push(relation);
-	if(index === max_index){
-		req.locals.result_array = result_array;
+var _add_result = function(req, index, max_index, next, relation){
+	req.locals.result_array.push(relation);
+	if(index == max_index){
+		debugger;
 		next();
 	}
 };
@@ -176,6 +173,7 @@ var add_invitee_to_home = function(req, res, next){
 	home.save();
 
 	res.status(200);
+	debugger;
 	res.json({
 		relation: req.locals.result_array,
 		home_id: home.home_id
