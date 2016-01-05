@@ -184,7 +184,7 @@ UserSchema.methods.add_contractor = function(user_id, relation, nickname){
 		relation: relation,
 	};
 
-	this.contract.pushIfNotExist(new_contractor, function(e){
+	this.contact.pushIfNotExist(new_contractor, function(e){
 		return e.user_id == new_contractor.user_id;
 	});
 
@@ -193,7 +193,7 @@ UserSchema.methods.add_contractor = function(user_id, relation, nickname){
 		this.friend_number ++;
 	}
 
-	this.contract = this.contract.sort().slice(0, this.friend_number);
+	this.contact = this.contact.sort().slice(0, this.friend_number);
 };
 
 /*

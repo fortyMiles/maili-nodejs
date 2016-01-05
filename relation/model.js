@@ -54,7 +54,7 @@ HomeSchema.statics.create_home = function(home_id, creator, creator_position, ca
 	var home_data = {
 		home_id: home_id,
 		creator: creator._id,
-		owner: creator.user_id,
+		owner: creator._id,
 		member:[{
 			user_id: creator._id,
 			position: creator_position,

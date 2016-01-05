@@ -44,7 +44,7 @@ var change_id_to_model = function(model, req, res, next){
 		restriction = {home_id: req.body.home_id};
 	}else if(model == 'inviter' || model == 'invitee'){
 		target_model = User;
-		restriction = {phone: req.body[model]};
+		restriction = {user_id: req.body[model]};
 	}else{
 		throw(Error('unacceptable model name:' + model));
 	}

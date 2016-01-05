@@ -17,7 +17,7 @@ var _ = require('ramda');
  *
  * @api public
  */
-var create_relation = function(req, res, next){
+var _create_relation = function(req, res, next){
 
 	var HOME = 'H';
 
@@ -53,7 +53,7 @@ var create_relation = function(req, res, next){
 		if(invitee.find_self_home(position)){
 			invitee.change_default_home(home.home_id, home.owner);
 		}else{
-			invitee.add_a_home(home.home_id, home.owner, converse_relation);
+			invitee.add_a_home(home.home_id, home.owner);
 		}
 		invitee.save();
 
@@ -68,6 +68,101 @@ var create_relation = function(req, res, next){
 };
 
 /*
+ * Cacualte inviter and invitee relationship.
+ *
+ * @param {Model} inviter
+ * @param {Model} invitee
+ * @param {Number} invitee_position
+ * @param {Model} home, the inviter and invitee belong home.
+ */
+
+var caculate_inviter_and_invitee_relationship = function(inviter, invitee, invitee_position, home){
+	var inviter_info = home.member.filter(function(member){
+		return member.user_id == inviter.user_id;
+	})[0];
+
+	var inviter_call_invitee = relation_value.get_title(inviter_info.position, invitee_position, invitee.is_male());
+	return inviter_call_invitee;
+};
+
+/*
+ * Create new realtionship.
+ */
+
+var create_relation = function(req, res, next){
+	var scope = req.body.scope;
+    var HOME = 'H';
+	var RELATION = 'R';
+
+	var inviter = req.locals.inviter;
+	var invitee = req.locals.invitee;
+
+	var inviter_call_invitee = null; // relation inviter_call_invitee
+	var invitee_call_inviter = null;
+
+	if(scope == HOME){
+		var home = req.locals.home;
+
+		var invitee_position = req.body.invitee_position;
+
+		// get relation bewteen inviter and invitee.
+		inviter_call_invitee = caculate_inviter_and_invitee_relationship(inviter, invitee, invitee_position, home);
+		invitee_call_inviter = relation_value.get_converse_relation(inviter.is_male(), inviter_call_invitee);
+
+		// create this realtion in db.
+		relation_handler.create_new_relation({
+			user1: inviter.user_id,
+			user2: invitee.user_id,
+			relation: inviter_call_invitee,
+			scope: scope,
+		});
+
+		// check if find one's self home.
+		if(invitee.find_self_home(invitee_position)){
+			invitee.change_default_home(home.home_id, home.owner);
+		}else{
+			invitee.add_a_home(home.home_id, home.owner, invitee_call_inviter);
+		}
+		invitee.save();
+
+		// connect each person in group with invitee.
+		var connect_home_member_with_new_user = _.curry(_connect_two_person)(invitee)(invitee_position);
+
+		var result_array = [];
+
+		for(var index = 0; index < home.member.length; index++){
+			if(home.member[index].user_id == invitee.user_id){
+				continue;
+			}
+			
+			var _add_relation_to_result = _.curry(_add_result)(result_array, req, index, home.member.length - 1, next);
+			connect_home_member_with_new_user(home.member[index], _add_relation_to_result);
+		}
+	}else if(scope == RELATION){
+		inviter_call_invitee = req.body.relation;
+		invitee_call_inviter = relation_value.get_converse_relation(inviter.is_male(), relation);
+		inviter.add_contractor(invitee.user_id, inviter_call_invitee, invitee.nickname);
+		invitee.add_contractor(inviter.user_id, invitee_call_inviter, inviter.nickname);
+	}else{
+		res.status(400);
+		res.json({error:'scope unacceptable'});
+	}
+};
+
+/*
+ *  Push result.
+ *
+ */
+
+var _add_result = function(result_array, req, index, max_index, next, relation){
+	result_array.push(relation);
+	if(index === max_index){
+		req.locals.result_array = result_array;
+		next();
+	}
+};
+
+/*
  * Updarte home
  */
 
@@ -76,21 +171,12 @@ var add_invitee_to_home = function(req, res, next){
 	var position = req.body.invitee_position;
 	var invitee = req.locals.invitee;
 
-	_update_home_info(home, position, invitee);
-};
-/*
- * Update Home info
- *
- * @param {Model} home
- * @param {Number} new person position.
- * @param {String} user_phone_number
- * @api private
- */
-
-var _update_home_info = function(home, position, user){
-	home.add_member(user, position);
+	home.add_member(invitee, position);
 	home.update_home_owner();
 	home.save();
+
+	res.status(200);
+	res.json({data: req.locals.result_array});
 };
 
 /*
@@ -103,11 +189,10 @@ var _update_home_info = function(home, position, user){
  * @param {Function} notification for create new relation.
  */
 
-var _connect_two_person = function(new_user, new_user_position, notification, exist_member){
-
+var _connect_two_person = function(new_user, new_user_position, exist_member, callback){
 	var home_member_position = Number(exist_member.position);
 
-	user_handler.get_user_by_id(exist_member.username, function(previous_member){
+	user_handler.get_user_by_id(exist_member.user_id, function(previous_member){
 		var relation_member_call_user = relation_value.get_title(home_member_position, new_user_position, new_user.is_male());
 
 		previous_member.add_contractor(new_user.phone, relation_member_call_user, new_user.nickname);
@@ -116,13 +201,23 @@ var _connect_two_person = function(new_user, new_user_position, notification, ex
 		var relation_user_call_member = relation_value.get_title(new_user_position, home_member_position, previous_member.is_male());
 		new_user.add_contractor(previous_member.phone, relation_user_call_member, previous_member.nickname);
 
-		new_user.save().then(function(){
-			notification(new_user.phone, previous_member.phone, relation_user_call_member);
+		new_user.save(function(){
+			console.log(new_user.user_id + ' ' + previous_member.user_id + ' ' + relation_user_call_member);
 		});
 
 		previous_member.save(function(){
-			notification(previous_member.phone, new_user.phone, relation_member_call_user);
+			//notification(previous_member.phone, new_user.phone, relation_member_call_user);
+			console.log(previous_member.user_id + ' ' + new_user.user_id + ' ' + relation_member_call_user);
 		});
+
+		var relation = {
+			receiver: new_user.user_id,
+			friend: previous_member.user_id,
+			relation: relation_user_call_member,
+			converse_relation: relation_member_call_user
+		};
+
+		callback(relation);
 	});
 };
 
