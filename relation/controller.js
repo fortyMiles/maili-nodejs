@@ -77,6 +77,7 @@ var _create_relation = function(req, res, next){
  */
 
 var caculate_inviter_and_invitee_relationship = function(inviter, invitee, invitee_position, home){
+	debugger;
 	var inviter_info = home.member.filter(function(member){
 		return member.user_id == inviter.user_id;
 	})[0];
@@ -154,7 +155,6 @@ var create_relation = function(req, res, next){
 var _add_result = function(req, index, max_index, next, relation){
 	req.locals.result_array.push(relation);
 	if(index == max_index){
-		debugger;
 		next();
 	}
 };
@@ -173,7 +173,6 @@ var add_invitee_to_home = function(req, res, next){
 	home.save();
 
 	res.status(200);
-	debugger;
 	res.json({
 		relation: req.locals.result_array,
 		home_id: home.home_id
