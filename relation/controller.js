@@ -13,61 +13,6 @@ var notification = require('./notification.js').notification;
 var _ = require('ramda');
 
 /*
- * Based on user and relation, create relation.
- *
- * @api public
- */
-var _create_relation = function(req, res, next){
-
-	var HOME = 'H';
-
-	var inviter = req.locals.inviter;
-	var invitee = req.locals.invitee;
-	var relation = req.body.relation;
-	var scope = req.body.scope;
-
-
-	converse_relation = relation_value.get_converse_relation(inviter.is_male(), relation);
-
-	relation_handler.create_new_relation({
-		user1: inviter.phone,
-		user2: invitee.phone,
-		relation: relation,
-		scope: scope,
-	});
-
-	if(scope == HOME){
-		var home = req.locals.home;
-		var position = req.body.invitee_position;
-
-		var connect_home_member_with_new_user = _.curry(_connect_two_person)(invitee)(position)(notification);
-
-		for(var i = 0; i < home.member.length; i++){
-			if(home.member[i].username == invitee.phone){
-				continue;
-			}else{
-				connect_home_member_with_new_user(home.member[i]);
-			}
-		}
-
-		if(invitee.find_self_home(position)){
-			invitee.change_default_home(home.home_id, home.owner);
-		}else{
-			invitee.add_a_home(home.home_id, home.owner);
-		}
-		invitee.save();
-
-	}else{
-		inviter.add_contractor(invitee.phone, relation, relation);
-		invitee.add_contractor(inviter.phone, converse_relation, inviter.nickname);
-	}
-
-	res.status(200);
-	res.json({created: 'success'});
-	next();
-};
-
-/*
  * Cacualte inviter and invitee relationship.
  *
  * @param {Model} inviter
@@ -127,17 +72,10 @@ var create_relation = function(req, res, next){
 		invitee.save();
 
 		// connect each person in group with invitee.
-		var connect_home_member_with_new_user = _.curry(_connect_two_person)(invitee)(invitee_position);
-
-		req.locals.result_array = [];
-		for(var index = 0; index < home.member.length; index++){
-			if(home.member[index].user_id == invitee.user_id){
-				continue;
-			}
-			
-			var _add_relation_to_result = _.curry(_add_result)(req, index, home.member.length - 1, next);
-			connect_home_member_with_new_user(home.member[index], _add_relation_to_result);
-		}
+		_connect_home_member_and_invitee(home, invitee, invitee_position, function(relation_result_array){
+			req.locals.result_array = relation_result_array;
+			next();
+		});
 	}else if(scope == RELATION){
 		inviter_call_invitee = req.body.relation;
 		invitee_call_inviter = relation_value.get_converse_relation(inviter.is_male(), relation);
@@ -146,6 +84,25 @@ var create_relation = function(req, res, next){
 	}
 };
 
+/*
+ * Connect home member and invitee.
+ */
+
+var _connect_home_member_and_invitee = function(home, invitee, invitee_position, callback){
+	var _connect_home_member_with_new_user = _.curry(_connect_two_person)(invitee)(invitee_position);
+
+	var result_array = [];
+	_.map(function(user){
+		_connect_home_member_with_new_user(user, function(relation){
+			result_array.push(relation);
+			if(result_array.length == home.member.length){
+				callback(result_array);
+			}
+		});
+	}, home.member);
+};
+
+	
 /*
  *  Push result.
  *
@@ -192,6 +149,7 @@ var _connect_two_person = function(new_user, new_user_position, exist_member, ca
 	var home_member_position = Number(exist_member.position);
 
 	user_handler.get_user_by_id(exist_member.user_id, function(previous_member){
+		debugger;
 		var relation_member_call_user = relation_value.get_title(home_member_position, new_user_position, new_user.is_male());
 
 		previous_member.add_contractor(new_user.phone, relation_member_call_user, new_user.nickname);
@@ -200,6 +158,7 @@ var _connect_two_person = function(new_user, new_user_position, exist_member, ca
 		var relation_user_call_member = relation_value.get_title(new_user_position, home_member_position, previous_member.is_male());
 		new_user.add_contractor(previous_member.phone, relation_user_call_member, previous_member.nickname);
 
+		assert.equal(new_user.length === 0, false);
 		new_user.save(function(){
 			console.log(new_user.user_id + ' ' + previous_member.user_id + ' ' + relation_user_call_member);
 		});
@@ -213,7 +172,8 @@ var _connect_two_person = function(new_user, new_user_position, exist_member, ca
 			receiver: {
 				user_id: new_user.user_id,
 				name: new_user.name,
-				avatar: new_user.gender,
+				avatar: new_user.avatar,
+				gender: new_user.gender,
 				marital_status: new_user.marital_status,
 				phone: new_user.phone,
 			},
@@ -221,7 +181,8 @@ var _connect_two_person = function(new_user, new_user_position, exist_member, ca
 			friend: {
 				user_id: previous_member.user_id,
 				name: previous_member.name,
-				avatar: previous_member.gender,
+				avatar: previous_member.avatar,
+				gender: previous_member.gender,
 				marital_status: previous_member.marital_status,
 				phone: previous_member.phone,
 			},

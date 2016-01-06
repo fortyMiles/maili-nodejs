@@ -181,6 +181,7 @@ UserSchema.methods.add_contractor = function(user_id, relation, nickname){
 	relation = relation || 'F';
 	nickname = nickname || "";
 
+	debugger;
 	var contractor_exist = false;
 
 	var new_contractor = {

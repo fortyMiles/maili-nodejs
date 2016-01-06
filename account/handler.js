@@ -48,7 +48,7 @@ var get_user_by_id = function(user_id, callback){
 var get_user_joined_home = function(user_id, callback){
 	UserModel
 	.findOne({user_id: user_id},'-home._id')
-	.populate('home.home', '-_id owner')
+	.populate('home.home', '-_id home_id owner')
 	.exec(function(err, user){
 		if(err) throw err;
 		callback(user.home);
