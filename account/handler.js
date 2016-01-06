@@ -45,16 +45,16 @@ var get_user_by_id = function(user_id, callback){
  *
  */
 
-var get_user_joined_home = function(user_phone, callback){
-	UserModel.findOne({phone: user_phone},'-home._id', function(err, user){
+var get_user_joined_home = function(user_id, callback){
+	UserModel.findOne({user_id: user_id},'-home._id', function(err, user){
 		if(err) throw err;
 		callback(user.home);
 	});
 };
 
-var check_user_exist = function(user_phone, callback){
+var check_user_exist = function(user_id, callback){
 	var restirction = {
-		phone: user_phone,
+		user_id: user_id
 	};
 
 	UserModel.count(restirction, function(err, count){

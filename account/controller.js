@@ -138,7 +138,8 @@ var get_captcha = function(req, res, next){
  */
 
 var get_home_list = function(req, res, next){
-	handler.get_user_joined_home(req.params.user_phone, function(homes){
+	debugger;
+	handler.get_user_joined_home(req.params.user_id, function(homes){
 		res.status(202);
 		res.json({data: homes});
 	});

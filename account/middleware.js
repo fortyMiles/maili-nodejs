@@ -30,7 +30,8 @@ var verify_boolean = function(req, res, next){
 };
 
 var check_user_exist_by_params = function(req, res, next){
-	handler.check_user_exist(req.params.user_phone, function(count){
+	debugger;
+	handler.check_user_exist(req.params.user_id, function(count){
 		if(count > 0){
 			next();
 		}else{

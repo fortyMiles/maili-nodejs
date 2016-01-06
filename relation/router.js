@@ -25,6 +25,7 @@ router.post('/create/',
 			_.curry(middleware.change_id_to_model)('home'),
 			_.curry(middleware.change_id_to_model)('inviter'),
 			_.curry(middleware.change_id_to_model)('invitee'),
+			middleware.check_inviter_and_invitee_acceptable,
 			controller.create_relation,
 			controller.add_invitee_to_home);
 

@@ -78,6 +78,35 @@ var check_relation_acceptable = function(req, res, next){
 };
 
 /*
+ * Check if invitee already in this home.
+ *
+ */
+
+var check_inviter_and_invitee_acceptable = function(req, res, next){
+	var invitee_already_in = false;
+	var inviter_already_in = false;
+	for(var i = 0; i < req.locals.home.member.length; i++){
+		if(req.locals.home.member[i].user_id == req.locals.invitee.user_id){
+			invitee_already_in = true;
+		}
+		if(req.locals.home.member[i].user_id == req.locals.inviter.user_id){
+			inviter_already_in = true;
+		}
+	}
+
+	if(invitee_already_in){
+        res.status(409);
+		res.json({confilct: 'invitee already in home'});
+	}else if(inviter_already_in === false){
+		res.status(401);
+		res.json({unauthorized: 'this inviter can not invite person into this home.'});
+	}else{
+		next();
+	}
+};
+
+
+/*
  * Check paramter required.
  *
  */
@@ -87,4 +116,5 @@ module.exports = {
 	check_relation_acceptable: check_relation_acceptable,
 	change_id_to_model: change_id_to_model,
 	change_to_position_code: change_to_position_code,
+	check_inviter_and_invitee_acceptable: check_inviter_and_invitee_acceptable,
 };

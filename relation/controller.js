@@ -77,7 +77,6 @@ var _create_relation = function(req, res, next){
  */
 
 var caculate_inviter_and_invitee_relationship = function(inviter, invitee, invitee_position, home){
-	debugger;
 	var inviter_info = home.member.filter(function(member){
 		return member.user_id == inviter.user_id;
 	})[0];

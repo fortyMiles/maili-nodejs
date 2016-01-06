@@ -34,7 +34,7 @@ router.route('/user/')
 router.get('/info/:user_id', 
 		   controller.get_user_information);
 router.get('/exist/:username', controller.check_user_exist);
-router.get('/home_list/:user_phone', 
+router.get('/home_list/:user_id', 
 		   middleware.check_user_exist_by_params,
 		   controller.get_home_list);
 
