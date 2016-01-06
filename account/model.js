@@ -61,9 +61,9 @@ var UserSchema = new Schema({
 	}],
 
 	home:[{ // a person joined home.
-		home_id: String,
+		home: {type: String, ref: 'Home'},
 		home_nickname: {type: String, default: ""},
-		home_owner: String,
+	//	home_owner: String,
 		home_relation: String, // Relation with self and home owner.
 	}],
 });
@@ -324,9 +324,9 @@ UserSchema.methods.add_a_home = function(home_id, home_owner, relation){
 	relation = relation || 'self';
 
 	this.home.push({
-		home_id: home_id,
+		home: home_id,
 		home_nickname: "",
-		home_owner: home_owner,
+		//home_owner: home_owner,
 		home_relation: relation,
 	});
 };
@@ -404,8 +404,8 @@ UserSchema.methods.change_default_home = function(new_home_id, new_home_owner){
 	var previous_home_id = this.default_home;
 
 	for(var i in this.home){
-		if(this.home[i].home_id == previous_home_id){
-			this.home[i].home_id = new_home_id;
+		if(this.home[i].home == previous_home_id){
+			this.home[i].home = new_home_id;
 			this.home[i].nickname = '我的小家';
 			this.home[i].home_owner = new_home_owner;
 		}

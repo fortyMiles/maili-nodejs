@@ -12,6 +12,7 @@ var Schema = mongoose.Schema;
 var relation_value = require('./data/relation_value.js');
 
 var HomeSchema = new Schema({
+	_id: String,
 	home_id: String,
 	creator: {type: String, ref: 'User'},
 	owner: String,
@@ -36,7 +37,7 @@ HomeSchema.methods.update_home_owner = function(){
 
 	this.member.map(function(user){
 		if(user.position == HOST){
-			this.owner = user.username;
+			this.owner = user.user_id;
 		}
 	}, this);
 };
@@ -52,6 +53,7 @@ HomeSchema.methods.update_home_owner = function(){
 
 HomeSchema.statics.create_home = function(home_id, creator, creator_position, callback){
 	var home_data = {
+		_id: home_id,
 		home_id: home_id,
 		creator: creator._id,
 		owner: creator._id,
