@@ -104,7 +104,7 @@ var login = function(username, password, callback){
 };
 
 var get_user_information = function(user_id, callback){
-	UserModel.findOne({user_id: user_id}, '-_id -__v -password', function(err, user){
+	UserModel.findOne({user_id: user_id}, '-_id -__v -password -current_session_token', function(err, user){
 		if(err) throw err;
 		callback(user);
 	});
