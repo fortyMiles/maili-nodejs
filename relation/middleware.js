@@ -83,6 +83,7 @@ var check_relation_acceptable = function(req, res, next){
  */
 
 var check_inviter_and_invitee_acceptable = function(req, res, next){
+	debugger;
 	var invitee_already_in = false;
 	var inviter_already_in = false;
 	for(var i = 0; i < req.locals.home.member.length; i++){

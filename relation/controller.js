@@ -24,7 +24,7 @@ var assert = require('assert');
 
 var caculate_inviter_and_invitee_relationship = function(inviter, invitee, invitee_position, home){
 	var inviter_info = home.member.filter(function(member){
-		return member.user_id == inviter.user_id;
+		return member.user == inviter.user_id;
 	})[0];
 
 	var inviter_call_invitee = relation_value.get_title(inviter_info.position, invitee_position, invitee.is_male());
@@ -149,7 +149,7 @@ var add_invitee_to_home = function(req, res, next){
 var _connect_two_person = function(new_user, new_user_position, exist_member, callback){
 	var home_member_position = Number(exist_member.position);
 
-	user_handler.get_user_by_id(exist_member.user_id, function(previous_member){
+	user_handler.get_user_by_id(exist_member.user, function(previous_member){
 		debugger;
 		var relation_member_call_user = relation_value.get_title(home_member_position, new_user_position, new_user.is_male());
 
