@@ -86,10 +86,10 @@ var check_inviter_and_invitee_acceptable = function(req, res, next){
 	var invitee_already_in = false;
 	var inviter_already_in = false;
 	for(var i = 0; i < req.locals.home.member.length; i++){
-		if(req.locals.home.member[i].user_id == req.locals.invitee.user_id){
+		if(req.locals.home.member[i].user == req.locals.invitee.user_id){
 			invitee_already_in = true;
 		}
-		if(req.locals.home.member[i].user_id == req.locals.inviter.user_id){
+		if(req.locals.home.member[i].user == req.locals.inviter.user_id){
 			inviter_already_in = true;
 		}
 	}
