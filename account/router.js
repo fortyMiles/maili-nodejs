@@ -44,7 +44,7 @@ router.post('/login/',
 		   );
 router.post('/captcha/', controller.get_captcha);
 
-router.get('/contact/:user_phone',
+router.get('/contact/:user_id',
 		   middleware.check_user_exist_by_params,
 		   controller.get_contract_list);
 

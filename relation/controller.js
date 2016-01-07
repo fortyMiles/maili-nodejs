@@ -11,6 +11,7 @@ var relation_handler = require('./handler.js');
 var relation_value = require('./data/relation_value.js');
 var notification = require('./notification.js').notification;
 var _ = require('ramda');
+var assert = require('assert');
 
 /*
  * Cacualte inviter and invitee relationship.
@@ -152,11 +153,11 @@ var _connect_two_person = function(new_user, new_user_position, exist_member, ca
 		debugger;
 		var relation_member_call_user = relation_value.get_title(home_member_position, new_user_position, new_user.is_male());
 
-		previous_member.add_contractor(new_user.phone, relation_member_call_user, new_user.nickname);
+		previous_member.add_contractor(new_user.user_id, relation_member_call_user, new_user.nickname);
 		// home member add new user to his contract.
 
 		var relation_user_call_member = relation_value.get_title(new_user_position, home_member_position, previous_member.is_male());
-		new_user.add_contractor(previous_member.phone, relation_user_call_member, previous_member.nickname);
+		new_user.add_contractor(previous_member.user_id, relation_user_call_member, previous_member.nickname);
 
 		assert.equal(new_user.length === 0, false);
 		new_user.save(function(){

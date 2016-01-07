@@ -149,9 +149,9 @@ var get_home_list = function(req, res, next){
  */
 
 var get_contract_list = function(req, res, next){
-	handler.get_user_by_phone(req.params.user_phone, function(user){
+	handler.get_user_by_id(req.params.user_id, function(user){
 		res.status(200);
-		res.json({data: user.contract});
+		res.json({data: user.get_contact()});
 	});
 };
 

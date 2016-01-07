@@ -44,7 +44,7 @@ var UserSchema = new Schema({
 	register_date: {type: Date, default: Date.now, select: false},
 	default_home: {type: String, select: false}, //everyone has a initial home.
 	current_session_token: String, // current session token. Every time login or register, will give a token back to him.
-	default_home_position: {type: Number, default: 4, select: false},
+	default_home_position: {type: Number, default: 4},
 	friend_number: {type: Number, default:0, select: false},
 
 	contact:[{ // a person's all contracts.
@@ -71,6 +71,10 @@ var UserSchema = new Schema({
 UserSchema.virtual('name').get(function(){
 	return this.last_name + this.first_name;
 });
+
+UserSchema.methods.get_contact = function(){
+	return this.contact;
+};
 
 UserSchema.methods.is_single = function(){
 	return this.marital_status === false;	
@@ -181,7 +185,6 @@ UserSchema.methods.add_contractor = function(user_id, relation, nickname){
 	relation = relation || 'F';
 	nickname = nickname || "";
 
-	debugger;
 	var contractor_exist = false;
 
 	var new_contractor = {
@@ -196,7 +199,11 @@ UserSchema.methods.add_contractor = function(user_id, relation, nickname){
 
 	if(!(user_id in this._contract_mapper)){
 		this._contract_mapper[user_id] = true;
-		this.friend_number ++;
+		if(this.friend_number){
+			this.friend_number ++;
+		}else{
+			this.friend_number = 1;
+		}
 	}
 
 	this.contact = this.contact.sort().slice(0, this.friend_number);
