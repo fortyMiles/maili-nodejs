@@ -38,7 +38,7 @@ var relation_accept = relation_dic.relation_accept;
 
 var get_home_by_id = function(home_id, callback){
 	Home.findOne({home_id: home_id}, '-_id')
-	.populate('member.user_id')
+	.populate('member.user')
 	.exec(function(err, home){
 		if(err) throw err;
 		callback(home);
