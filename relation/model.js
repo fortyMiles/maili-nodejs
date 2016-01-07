@@ -18,7 +18,7 @@ var HomeSchema = new Schema({
 	owner: String,
 	create_time: {type: Date, default: Date.now},
 	member:[{
-		user_id: {type: String, ref: 'User'},
+		user: {type: String, ref: 'User'},
 		position: Number,
 		//location: [],
 	}],
@@ -58,7 +58,7 @@ HomeSchema.statics.create_home = function(home_id, creator, creator_position, ca
 		creator: creator._id,
 		owner: creator._id,
 		member:[{
-			user_id: creator._id,
+			user: creator._id,
 			position: creator_position,
 		}],
 	};
@@ -107,7 +107,7 @@ HomeSchema.statics.add_person_to_a_home = function(home_id, user, position, call
  */
 HomeSchema.methods.add_member = function(user, position){
 	this.member.push({
-		user_id: user._id,
+		user: user._id,
 		position: Number(position),
 	});
 };
