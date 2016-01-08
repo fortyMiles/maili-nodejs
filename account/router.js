@@ -20,13 +20,14 @@ router.use(function(req, res, next){
 router.route('/user/')
 .post(
 	_.curry(middleware.check_paramter_lack)(['phone', 'password']),
-	middleware.check_duplicate,
+	//middleware.check_duplicate,
+	
 	middleware.verify_boolean,
 	controller.create_user
 )
 .put(
 	_.curry(middleware.check_paramter_lack)(['phone']),
-	middleware.check_user_exist,
+	middleware.check_user_phone_exist,
 	middleware.verify_boolean,
 	controller.update_user
 );

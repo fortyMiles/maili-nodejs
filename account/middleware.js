@@ -52,6 +52,17 @@ var check_duplicate = function(req, res, next){
 };
 
 
+var check_user_phone_exist = function(req, res, next){
+	handler.check_phone_register(req.body.phone, function(count){
+		if(count > 0){
+			next();
+		}else{
+			res.status(404);
+			res.json({error: 'user not exist'});
+		}
+	});
+};
+
 var check_user_exist = function(req, res, next){
 	handler.check_user_exist(req.body.phone, function(count){
 		if(count > 0){
@@ -92,6 +103,7 @@ var check_paramter_lack = function(need_paramter, req, res, next){
 module.exports = {
 	check_duplicate: check_duplicate,
 	check_user_exist: check_user_exist,
+	check_user_phone_exist: check_user_phone_exist,
 	check_user_exist_by_params: check_user_exist_by_params,
 	check_paramter_lack: check_paramter_lack,
 	verify_boolean: verify_boolean,
