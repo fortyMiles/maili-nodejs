@@ -41,7 +41,7 @@ var check_user_exist_by_params = function(req, res, next){
 };
 
 var check_duplicate = function(req, res, next){
-	handler.check_user_exist(req.body.phone, function(count){
+	handler.check_phone_register(req.body.phone, function(count){
 		if(count > 0){
 			res.status(409);
 			res.json({error: 'user deplicated'});

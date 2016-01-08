@@ -66,6 +66,17 @@ var check_user_exist = function(user_id, callback){
 	});
 };
 
+var check_phone_register = function(user_phone, callback){
+	var restirction = {
+		phone: user_phone
+	};
+
+	UserModel.count(restirction, function(err, count){
+		if(err) throw err;
+		callback(count);
+	});
+};
+
 var create_new_user = function(data, callback){
 	var user = new UserModel(data);
 	user.register_data = new Date();
@@ -140,6 +151,7 @@ var add_user_to_a_user_contractor = function(user_id, new_user_id, relation, nic
 module.exports = {
 	create_new_user: create_new_user,
 	check_user_exist: check_user_exist,
+	check_phone_register: check_phone_register,
 	update_user: update_user,
 	login: login,
 	get_user_information: get_user_information,
