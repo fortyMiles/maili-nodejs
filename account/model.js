@@ -42,7 +42,7 @@ var UserSchema = new Schema({
 	avatar: {type: String, default: ""}, // Avatar url,
 	last_login_date: {type: Date, select: false},
 	register_date: {type: Date, default: Date.now, select: false},
-	default_home: {type: String, select: false}, //everyone has a initial home.
+	default_home: {type: String}, //everyone has a initial home.
 	current_session_token: String, // current session token. Every time login or register, will give a token back to him.
 	default_home_position: {type: Number, default: 4},
 	friend_number: {type: Number, default:0, select: false},

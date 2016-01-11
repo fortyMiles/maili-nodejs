@@ -65,6 +65,7 @@ var create_relation = function(req, res, next){
 		});
 
 		// check if find one's self home.
+		debugger;
 		if(invitee.find_self_home(invitee_position)){
 			invitee.change_default_home(home.home_id, home.owner);
 		}else{
@@ -150,7 +151,6 @@ var _connect_two_person = function(new_user, new_user_position, exist_member, ca
 	var home_member_position = Number(exist_member.position);
 
 	user_handler.get_user_by_id(exist_member.user, function(previous_member){
-		debugger;
 		var relation_member_call_user = relation_value.get_title(home_member_position, new_user_position, new_user.is_male());
 
 		previous_member.add_contractor(new_user.user_id, relation_member_call_user, new_user.nickname);
