@@ -14,19 +14,42 @@ var verify_boolean = function(req, res, next){
 	var false_str = 'false';
 	var true_str = 'true';
 
-	if(req.body){
-		if('marital_status' in req.body){
-			var str_format = req.body.marital_status.toString().toLowerCase();
-			if(str_format == false_str){
-				req.body.marital_status = false;
-			}
-			if(str_format == true_str){
-				req.body.marital_status = true;
-			}
+	if('marital_status' in req.body){
+		var str_format = req.body.marital_status.toString().toLowerCase();
+		if(str_format == false_str){
+			req.body.marital_status = false;
+			next();
+		}else if(str_format == true_str){
+			req.body.marital_status = true;
+			next();
+		}else{
+			res.status(400);
+			res.json({error: 'key error: marital_status'});
 		}
+	}else{
+		next();
 	}
+};
 
-	next();
+var verify_gender = function(req, res, next){
+	var male = 'M';
+	var female = 'F';
+
+	if('gender' in req.body){
+		var str_format = req.body.gender.toString().toUpperCase();
+		if(str_format == male){
+			req.body.gender = male;
+			next();
+		}else if(str_format == female){
+			req.body.gender = female;
+			next();
+		}else{
+			res.status(400);
+			res.json({error: 'key error: gender'});
+		}
+	}else{
+		next();
+	}
 };
 
 var check_user_exist_by_params = function(req, res, next){
@@ -107,4 +130,5 @@ module.exports = {
 	check_user_exist_by_params: check_user_exist_by_params,
 	check_paramter_lack: check_paramter_lack,
 	verify_boolean: verify_boolean,
+	verify_gender: verify_gender,
 };

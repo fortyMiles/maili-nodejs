@@ -22,12 +22,14 @@ router.route('/user/')
 	_.curry(middleware.check_paramter_lack)(['phone', 'password']),
 	middleware.check_duplicate,
 	middleware.verify_boolean,
+	middleware.verify_gender,
 	controller.create_user
 )
 .put(
 	_.curry(middleware.check_paramter_lack)(['phone']),
 	middleware.check_user_phone_exist,
 	middleware.verify_boolean,
+	middleware.verify_gender,
 	controller.update_user
 );
 
