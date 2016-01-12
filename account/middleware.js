@@ -9,6 +9,7 @@
 
 var handler = require('./handler.js');
 var _ = require('ramda');
+var md5 = require('md5');
 
 var verify_boolean = function(req, res, next){
 	var false_str = 'false';
@@ -123,11 +124,32 @@ var check_paramter_lack = function(need_paramter, req, res, next){
 	}
 };
 
+/*
+ * Change password from string into md5, if string is not md5.
+ *
+ */
+
+var change_password_to_md5 = function(req, res, next){
+	var reg_exp = '^[a-f0-9]{32}$';
+
+	var password = req.body.password || "";
+
+	var is_md5 = password.match(reg_exp);
+
+	if(!is_md5 && password !== ""){
+		req.body.password = md5(password);
+		next();
+	}else{
+		next();
+	}
+};
+
 module.exports = {
 	check_duplicate: check_duplicate,
 	check_user_exist: check_user_exist,
 	check_user_phone_exist: check_user_phone_exist,
 	check_user_exist_by_params: check_user_exist_by_params,
+	change_password_to_md5: change_password_to_md5,
 	check_paramter_lack: check_paramter_lack,
 	verify_boolean: verify_boolean,
 	verify_gender: verify_gender,

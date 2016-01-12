@@ -23,6 +23,7 @@ router.route('/user/')
 	middleware.check_duplicate,
 	middleware.verify_boolean,
 	middleware.verify_gender,
+	middleware.change_password_to_md5,
 	controller.create_user
 )
 .put(
@@ -30,6 +31,7 @@ router.route('/user/')
 	middleware.check_user_phone_exist,
 	middleware.verify_boolean,
 	middleware.verify_gender,
+	middleware.change_password_to_md5,
 	controller.update_user
 );
 
@@ -42,6 +44,7 @@ router.get('/home_list/:user_id',
 
 
 router.post('/login/', 
+			middleware.change_password_to_md5,
 			controller.login_user
 		   );
 router.post('/captcha/', controller.get_captcha);
