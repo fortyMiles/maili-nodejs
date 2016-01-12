@@ -10,6 +10,13 @@ var handler = require('./handler.js');
 var relation_handler = require('../relation/handler.js');
 var _ = require('ramda');
 
+var parse_token = function(req, res, next){
+	// empty for temper
+	
+	res.status(200);
+	res.json({token: 'valid'});
+};
+
 var get_user_information = function(req, res, next){
 	var user_id = req.params.user_id;
 	
@@ -180,4 +187,5 @@ module.exports = {
 	get_contract_list: get_contract_list,
 	get_home_info: get_home_info,
 	get_feed_scope: get_feed_scope,
+	parse_token: parse_token,
 };

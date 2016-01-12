@@ -11,9 +11,9 @@ var router = express.Router();
 var controller = require('./controller.js');
 var middleware = require('./middleware.js');
 var _ = require('ramda');
+var jwt = require('jsonwebtoken');
 
 router.use(function(req, res, next){
-	console.log('check token');
 	next();
 });
 
@@ -59,5 +59,10 @@ router.get('/contact/:user_id',
 router.get('/scope/:user_phone', 
 		   middleware.check_user_exist_by_params,
 		   controller.get_feed_scope);
+
+router.get('/token/:token',
+		  middleware.check_token,
+		  controller.parse_token
+		  );
 
 module.exports = router;

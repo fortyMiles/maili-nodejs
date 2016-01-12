@@ -10,6 +10,25 @@
 var handler = require('./handler.js');
 var _ = require('ramda');
 var md5 = require('md5');
+var jwt = require('jsonwebtoken');
+
+var check_token = function(req, res, next){
+	var token = req.params.token || null;
+	var SECERT = 'foremly';
+	debugger;
+	if(token){
+		jwt.verify(token, SECERT, function(err, decode){
+			if(err){
+				res.status(412);
+				res.json({err: 'token is invalid'});
+			}else{
+				next();
+			}
+		});
+	}else{
+		next();
+	}
+};
 
 var verify_boolean = function(req, res, next){
 	var false_str = 'false';
@@ -153,4 +172,5 @@ module.exports = {
 	check_paramter_lack: check_paramter_lack,
 	verify_boolean: verify_boolean,
 	verify_gender: verify_gender,
+	check_token: check_token,
 };
