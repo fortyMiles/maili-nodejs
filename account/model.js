@@ -352,7 +352,7 @@ var _generate_random_int = function(min, max){
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-UserSchema.methods.generate_session_code = function(){
+UserSchema.methods.generate_session_code = function(callback){
 	/*
 	var number = Number(this.user_id);
 	var length_min = 2, length_max = 2;
@@ -368,10 +368,17 @@ UserSchema.methods.generate_session_code = function(){
 
 	var secret = 'foremly';
 	var token = this.current_session_token;
-	var expires_time = 180;
+	var expires_time = 600;
+	var current_user = this;
 
-	token = jwt.sign({user: this.user_id}, secret, {expiresIn: expires_time});
-	this.current_session_token = token;
+	jwt.verify(this.current_session_token, secret, function(err, decoded){
+		if(err){
+			debugger;
+			token = jwt.sign({user: this.user_id}, secret, {expiresIn: expires_time});
+			current_user.current_session_token = token;
+		}
+		callback();
+	});
 };
 
 /*

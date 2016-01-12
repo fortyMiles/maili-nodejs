@@ -83,11 +83,12 @@ var create_new_user = function(data, callback){
 	user.is_login = true;
 
 	user.initiate();
-	user.generate_session_code();
-	user._id = user.user_id;
-
-	user.save(function(err, user){
-		if(callback) callback(user);
+	user.generate_session_code(function(){
+		user._id = user.user_id;
+		user.save(function(err, user){
+			debugger;
+			if(callback) callback(user);
+		});
 	});
 };
 
@@ -107,10 +108,13 @@ var login = function(username, password, callback){
 		if(err) throw err;
 		if(user){
 			user.login();
-			user.generate_session_code();
-			user.save();
+			user.generate_session_code(function(){
+				user.save();
+				callback(user);
+			});
+		}else{
+			callback(null);
 		}
-		callback(user);
 	});
 };
 
