@@ -368,7 +368,7 @@ UserSchema.methods.generate_session_code = function(){
 
 	var secret = 'foremly';
 	var token = this.current_session_token;
-	var expires_time = 1;
+	var expires_time = 180;
 
 	token = jwt.sign({user: this.user_id}, secret, {expiresIn: expires_time});
 	this.current_session_token = token;
