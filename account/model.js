@@ -10,6 +10,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var _ = require('ramda');
 var assert = require('assert');
+var jwt = require('jsonwebtoken');
 
 Array.prototype.inArray = function(comparer){
 	for(var i=0; i < this.length; i++) { 
@@ -43,12 +44,12 @@ var UserSchema = new Schema({
 	last_login_date: {type: Date, select: false},
 	register_date: {type: Date, default: Date.now, select: false},
 	default_home: {type: String}, //everyone has a initial home.
-	current_session_token: String, // current session token. Every time login or register, will give a token back to him.
+	current_session_token: {type: String, default: null}, // current session token. Every time login or register, will give a token back to him.
 	default_home_position: {type: Number, default: 4},
 	friend_number: {type: Number, default:0, select: false},
 
 	contact:[{ // a person's all contracts.
-		user_id:String,
+		user_id:{type: String, ref: 'User'},
 		nickname: {type: String, default: ""},
 		relation: {type: String, default: 'F'},
 	}],
@@ -275,7 +276,6 @@ UserSchema.methods.get_home_position = function(){
 		},
 	};
 
-	debugger;
 	return position[this.marital_status][this.is_male()];
 
 
@@ -353,6 +353,7 @@ var _generate_random_int = function(min, max){
 };
 
 UserSchema.methods.generate_session_code = function(){
+	/*
 	var number = Number(this.user_id);
 	var length_min = 2, length_max = 2;
 	var length = _generate_random_int(length_min, length_max);
@@ -363,7 +364,14 @@ UserSchema.methods.generate_session_code = function(){
 	var random_number = _generate_random_int(min, max);
 	number *= random_number;
 	var session_token = number.toString() + random_number.toString() + length.toString();
-	this.current_session_token = session_token;
+	*/
+
+	var secret = 'foremly';
+	var token = this.current_session_token;
+	var expires_time = 1;
+
+	token = jwt.sign({user: this.phone}, secret, {expiresIn: expires_time});
+	this.current_session_token = token;
 };
 
 /*

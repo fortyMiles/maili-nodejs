@@ -144,9 +144,18 @@ var add_user_to_a_user_contractor = function(user_id, new_user_id, relation, nic
 };
 
 /*
- * Get home info
+ * Get user contract info.
  *
  */
+
+var get_user_contact_list = function(user_id, callback){
+	UserModel.findOne({user_id: user_id}, '-_id contact')
+	.populate('contact.user_id', 'first_name last_name avatar gender marital_status')
+	.exec(function(err, contact){
+		if(err) throw err;
+		callback(contact);
+	});
+};
 
 module.exports = {
 	create_new_user: create_new_user,
@@ -161,4 +170,5 @@ module.exports = {
 	add_home_to_a_person: add_home_to_a_person,
 	user_need_create_home: user_need_create_home,
 	add_user_to_a_user_contractor: add_user_to_a_user_contractor,
+	get_user_contact_list: get_user_contact_list,
 };
