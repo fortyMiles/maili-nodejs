@@ -125,6 +125,7 @@ UserSchema.statics.update_user = function(new_data, need_create_home, callback){
 		if(err) throw err;
 		if(need_create_home){
 			User.findOne(restriction, function(err, user){
+				user.default_home_position = user.get_home_position();
 				user.create_new_home();
 				user.save();
 				callback(user);
@@ -274,6 +275,7 @@ UserSchema.methods.get_home_position = function(){
 		},
 	};
 
+	debugger;
 	return position[this.marital_status][this.is_male()];
 
 
