@@ -220,11 +220,11 @@ UserSchema.methods.add_contractor = function(user_id, relation, nickname){
  */
 
 var create_id_by_name_and_time = function(name, group_name){
-	var time_length = 6;
-	var time_token = Date.now().toString().slice(-1 * time_length);
 	var last_code = group_name.charCodeAt(0);
-	var id = name + time_token + last_code;
-	return id;
+	var static_num = 1214;
+	var tile_code= last_code * last_code * static_num;
+	var id = name + tile_code;
+	return id.toString();
 };
 
 /*
@@ -353,19 +353,6 @@ var _generate_random_int = function(min, max){
 };
 
 UserSchema.methods.generate_session_code = function(callback){
-	/*
-	var number = Number(this.user_id);
-	var length_min = 2, length_max = 2;
-	var length = _generate_random_int(length_min, length_max);
-	var min = Math.pow(10, length - 1);  
-	// if length = 2, mean random number length is 2
-	var max = Math.pow(10, length) - 1; 
-	// so, the possible max is 99, which is 10^2 -1, min is 10, which is 10^(2-1)
-	var random_number = _generate_random_int(min, max);
-	number *= random_number;
-	var session_token = number.toString() + random_number.toString() + length.toString();
-	*/
-
 	var secret = 'foremly';
 	var token = this.current_session_token;
 	var expires_time = 600;
@@ -373,7 +360,6 @@ UserSchema.methods.generate_session_code = function(callback){
 
 	jwt.verify(this.current_session_token, secret, function(err, decoded){
 		if(err){
-			debugger;
 			token = jwt.sign({user: this.user_id}, secret, {expiresIn: expires_time});
 			current_user.current_session_token = token;
 		}
