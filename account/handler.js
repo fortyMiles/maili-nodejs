@@ -48,7 +48,7 @@ var get_user_by_id = function(user_id, callback){
 var get_user_joined_home = function(user_id, callback){
 	UserModel
 	.findOne({user_id: user_id},'-home._id')
-	.populate('home.home', '-_id home_id owner')
+	.populate('home.home', '-_id home_id owner avatar creator')
 	.exec(function(err, user){
 		if(err) throw err;
 		callback(user.home);
@@ -86,7 +86,6 @@ var create_new_user = function(data, callback){
 	user.generate_session_code(function(){
 		user._id = user.user_id;
 		user.save(function(err, user){
-			debugger;
 			if(callback) callback(user);
 		});
 	});
