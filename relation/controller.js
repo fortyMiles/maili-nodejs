@@ -127,7 +127,7 @@ var add_invitee_to_home = function(req, res, next){
 	var invitee = req.locals.invitee;
 
 	home.add_member(invitee, position);
-	home.update_home_owner();
+	debugger;
 	home.save();
 
 	res.status(200);

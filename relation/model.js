@@ -28,20 +28,6 @@ var HomeSchema = new Schema({
 });
 
 /*
- * Update home owner
- *
- */
-
-HomeSchema.methods.update_home_owner = function(){
-	var HOST = 4;
-
-	this.member.map(function(user){
-		if(user.position == HOST){
-			this.owner = user.user_id;
-		}
-	}, this);
-};
-/*
  * Create a new home by defalut home and position.
  *
  * @param {String} home_id
@@ -67,7 +53,6 @@ HomeSchema.statics.create_home = function(home_id, creator, creator_position, ca
 
 	home.save(function(err, home){
 		if(err) throw err;
-		home.update_home_owner();
 		callback(home);
 	});
 };
@@ -110,6 +95,12 @@ HomeSchema.methods.add_member = function(user, position){
 		user: user._id,
 		position: Number(position),
 	});
+
+	var HOST = 4;
+	
+	if(Number(position) == HOST){
+		this.owner = user._id;
+	}
 };
 
 var Home = mongoose.model('Home', HomeSchema);
