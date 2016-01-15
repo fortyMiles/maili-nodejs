@@ -27,7 +27,7 @@ router.route('/user')
 	controller.create_user
 )
 .put(
-	_.curry(middleware.check_paramter_lack)(['phone']),
+	_.curry(middleware.check_paramter_lack)(['user_id']),
 	middleware.check_user_id_exist,
 	middleware.verify_boolean,
 	middleware.verify_gender,
