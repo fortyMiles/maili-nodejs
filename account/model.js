@@ -373,7 +373,7 @@ var _generate_random_int = function(min, max){
 UserSchema.methods.generate_session_code = function(callback){
 	var secret = 'foremly';
 	var token = this.current_session_token;
-	var expires_time = 600;
+	var expires_time = 60 * 60;
 	var current_user = this;
 
 	jwt.verify(this.current_session_token, secret, function(err, decoded){

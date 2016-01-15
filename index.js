@@ -21,6 +21,7 @@ app.use('/account/',  account_router);
 app.use('/relation/', relation_router);
 app.use('/feed/', account_router);
 app.use('/message/', message_router);
+app.use('/feed/', message_router);
 
 var server = app.listen(3000, function(){
 	var host = server.address().address;

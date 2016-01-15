@@ -127,14 +127,16 @@ var get_captcha = function(req, res, next){
 	var user_phone = req.body.phone;
 	var code = user_phone.slice(-6);
 
-	var mutiple = 87;
-	var remain = 17;
-	var TILE = 10;
+	var mutiple = 30859;
+	var remain = 4231;
 
 	var new_code = "";
 
+	var answer = Number(user_phone);
+
 	for(var i in code){
-		var answer = (Number(code[i]) * mutiple % remain) % TILE;
+		var an
+		var answer = (Number(code[i]) * mutiple % remain);
 		new_code += answer.toString();
 	}
 
