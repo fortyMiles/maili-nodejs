@@ -105,12 +105,12 @@ var _create_home_by_user = function(user){
 var login_user = function(req, res, next){
 	var user_phone = req.body.phone;
 	var password = req.body.password;
-	handler.login(user_phone, password, function(user_info){
-		if(user_info){
+	handler.login(user_phone, password, function(user){
+		if(user){
 			var res_data = {
-				token: user_info.user.current_session_token,
-				data: user_info.user,
-				first_time_login: user_info.first_time_login,
+				token: user.current_session_token,
+				data: user,
+				first_time_login: user.is_first_time_login(),
 			};
 
 			res.status(201);

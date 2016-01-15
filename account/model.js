@@ -71,8 +71,9 @@ var UserSchema = new Schema({
 	}],
 });
 
-UserSchema.methods.first_time_login = function(){
-	return this.is_login;
+
+UserSchema.methods.is_first_time_login = function(){
+	return this.login_time <= 1;
 };
 
 UserSchema.virtual('name').get(function(){
@@ -99,10 +100,20 @@ UserSchema.methods.is_male = function(){
 	return this.gender == 'M';
 };
 
-UserSchema.methods.login = function(){
-	this.is_login = true;
-	this.last_login_date = new Date();
-	this.save();
+UserSchema.statics.login = function(phone, password, callback){
+	var model = this;	
+	model.findOne({phone: phone, password: password}, function(error, user){
+		if(error) throw error;
+		if(user){
+			user.login_time += 1;
+			user.is_login = true;
+			user.last_login_date = new Date();
+			user.save();
+			callback(user);
+		}else{
+			callback(null);
+		}
+	});
 };
 
 UserSchema.methods.logout = function(){
