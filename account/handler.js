@@ -93,7 +93,7 @@ var create_new_user = function(data, callback){
 
 
 var user_need_create_home = function(data, callback){
-	UserModel.findOne({phone: data.phone}, function(err, user){
+	UserModel.findOne({user_id: data.user_id}, function(err, user){
 		callback(user.need_create_home(data));
 	});
 };
