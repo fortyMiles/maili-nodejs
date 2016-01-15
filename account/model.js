@@ -137,8 +137,8 @@ UserSchema.methods.need_home = function(){
  *
  */
 
-UserSchema.statics.update_user = function(user_id, new_data, need_create_home, callback){
-	var restriction = {user_id: user_id};
+UserSchema.statics.update_user = function(new_data, need_create_home, callback){
+	var restriction = {user_id: new_data.user_id};
 
 	this.update(restriction, new_data, function(err, numberAffected){
 		if(err) throw err;
