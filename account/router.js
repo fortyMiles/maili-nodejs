@@ -65,4 +65,9 @@ router.get('/token/:token',
 		  controller.parse_token
 		  );
 
+router.get('/if-have-login/:user_id',
+		   middleware.check_user_exist_by_params,
+		   controller.test_if_have_logined
+		  );
+
 module.exports = router;

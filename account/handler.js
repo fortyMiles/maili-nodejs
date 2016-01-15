@@ -106,10 +106,18 @@ var login = function(username, password, callback){
 	UserModel.findOne({phone: username, password: password},'-_id -__v -password', function(err, user){
 		if(err) throw err;
 		if(user){
-			user.login();
-			user.generate_session_code(function(){
-				user.save();
-				callback(user);
+			var first_time_login = null;
+
+			_test_if_first_time_login(user.user_id, function(first_time_login){
+				first_time_login = first_time_login;
+				user.login();
+				user.generate_session_code(function(){
+					user.save();
+					callback({
+						user: user,
+						first_time_login: first_time_login,
+					});
+				});
 			});
 		}else{
 			callback(null);
@@ -157,6 +165,16 @@ var get_user_contact_list = function(user_id, callback){
 	.exec(function(err, contact){
 		if(err) throw err;
 		callback(contact);
+	});
+};
+
+var _test_if_first_time_login = function(user_id, callback){
+	UserModel.findOne({user_id: user_id}, function(err, user){
+		if(user){
+			callback(user.first_time_login());
+		}else{
+			callback(null);
+		}
 	});
 };
 

@@ -38,15 +38,17 @@ var UserSchema = new Schema({
 	gender: {type: String, enum: ['F', 'M', 'U'], default: 'U'},
 	marital_status: {type: Boolean, default: ""},
 	nickname: {type: String, default: ""},
-	is_login: {type: Boolean, default: false, select: false},
+	is_login: {type: Boolean, default: false},
 	tagline: String, // Self description.
 	avatar: {type: String, default: ""}, // Avatar url,
-	last_login_date: {type: Date, select: false},
+	last_login_date: {type: Date, default: null},
 	register_date: {type: Date, default: Date.now, select: false},
 	default_home: {type: String}, //everyone has a initial home.
 	current_session_token: {type: String, default: null}, // current session token. Every time login or register, will give a token back to him.
 	default_home_position: {type: Number, default: 4},
 	friend_number: {type: Number, default:0, select: false},
+	//if_have_login: {type: Boolean, default: false, select: false},
+	login_time: {type: Number, default: 0},
 
 	contact:[{ // a person's all contracts.
 		user_id:{type: String, ref: 'User'},
@@ -68,6 +70,10 @@ var UserSchema = new Schema({
 		home_relation: String, // Relation with self and home owner.
 	}],
 });
+
+UserSchema.methods.first_time_login = function(){
+	return this.is_login;
+};
 
 UserSchema.virtual('name').get(function(){
 	return this.last_name + this.first_name;
@@ -96,6 +102,7 @@ UserSchema.methods.is_male = function(){
 UserSchema.methods.login = function(){
 	this.is_login = true;
 	this.last_login_date = new Date();
+	this.save();
 };
 
 UserSchema.methods.logout = function(){
@@ -119,8 +126,8 @@ UserSchema.methods.need_home = function(){
  *
  */
 
-UserSchema.statics.update_user = function(new_data, need_create_home, callback){
-	var restriction = {phone: new_data.phone};
+UserSchema.statics.update_user = function(user_id, new_data, need_create_home, callback){
+	var restriction = {user_id: user_id};
 
 	this.update(restriction, new_data, function(err, numberAffected){
 		if(err) throw err;

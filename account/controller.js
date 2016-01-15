@@ -105,13 +105,16 @@ var _create_home_by_user = function(user){
 var login_user = function(req, res, next){
 	var user_phone = req.body.phone;
 	var password = req.body.password;
-	handler.login(user_phone, password, function(user){
-		if(user){
+	handler.login(user_phone, password, function(user_info){
+		if(user_info){
+			var res_data = {
+				token: user_info.user.current_session_token,
+				data: user_info.user,
+				first_time_login: user_info.first_time_login,
+			};
+
 			res.status(201);
-			res.json({
-				token: user.current_session_token,
-				data: user
-			});
+			res.json(res_data);
 		}else{
 			res.status(406);
 			res.json({error: 'account or password error'});
@@ -176,6 +179,13 @@ var get_feed_scope = function(req, res, next){
 	});
 };
 
+var test_if_have_logined = function(req, res, next){
+	handler.test_if_have_logined(req.params.user_id, function(logined){
+			res.status(200);
+			res.json({have_logined: logined});
+	});
+};
+
 module.exports = {
 	get_user_information: get_user_information,
 	check_user_exist: check_user_exist,
@@ -188,4 +198,5 @@ module.exports = {
 	get_home_info: get_home_info,
 	get_feed_scope: get_feed_scope,
 	parse_token: parse_token,
+	test_if_have_logined: test_if_have_logined,
 };
