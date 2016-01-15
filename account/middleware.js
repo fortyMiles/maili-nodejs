@@ -77,7 +77,7 @@ var check_user_id_exist = function(req, res, next){
 			next();
 		}else{
 			res.status(404);
-			res.json({error: 'can not locate use by this user_id, maybe you have an error with user_id value'});
+			res.json({error: 'can not locate any user by this user_id, maybe you have an error with user_id value'});
 		}
 	});
 };
