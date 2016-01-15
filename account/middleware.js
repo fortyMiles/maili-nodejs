@@ -15,7 +15,6 @@ var jwt = require('jsonwebtoken');
 var check_token = function(req, res, next){
 	var token = req.params.token || null;
 	var SECERT = 'foremly';
-	debugger;
 	if(token){
 		jwt.verify(token, SECERT, function(err, decode){
 			if(err){
@@ -70,6 +69,17 @@ var verify_gender = function(req, res, next){
 	}else{
 		next();
 	}
+};
+
+var check_user_id_exist = function(req, res, next){
+	handler.check_user_exist(req.body.user_id, function(count){
+		if(count > 0){
+			next();
+		}else{
+			res.status(404);
+			res.json({error: 'can not locate use by this user_id, maybe you have an error with user_id value'});
+		}
+	});
 };
 
 var check_user_exist_by_params = function(req, res, next){
@@ -166,6 +176,7 @@ var change_password_to_md5 = function(req, res, next){
 module.exports = {
 	check_duplicate: check_duplicate,
 	check_user_exist: check_user_exist,
+	check_user_id_exist: check_user_id_exist,
 	check_user_phone_exist: check_user_phone_exist,
 	check_user_exist_by_params: check_user_exist_by_params,
 	change_password_to_md5: change_password_to_md5,

@@ -17,7 +17,7 @@ router.use(function(req, res, next){
 	next();
 });
 
-router.route('/user/')
+router.route('/user')
 .post(
 	_.curry(middleware.check_paramter_lack)(['phone', 'password']),
 	middleware.check_duplicate,
@@ -28,7 +28,7 @@ router.route('/user/')
 )
 .put(
 	_.curry(middleware.check_paramter_lack)(['phone']),
-	middleware.check_user_phone_exist,
+	middleware.check_user_id_exist,
 	middleware.verify_boolean,
 	middleware.verify_gender,
 	middleware.change_password_to_md5,
