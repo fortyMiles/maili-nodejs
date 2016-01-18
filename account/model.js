@@ -105,11 +105,14 @@ UserSchema.statics.login = function(phone, password, callback){
 	model.findOne({phone: phone, password: password}, function(error, user){
 		if(error) throw error;
 		if(user){
-			user.login_time += 1;
-			user.is_login = true;
-			user.last_login_date = new Date();
-			user.save();
-			callback(user);
+			debugger;
+			user.generate_session_code(function(){
+				user.login_time += 1;
+				user.is_login = true;
+				user.last_login_date = new Date();
+				user.save();
+				callback(user);
+			});
 		}else{
 			callback(null);
 		}
@@ -374,13 +377,19 @@ UserSchema.methods.generate_session_code = function(callback){
 	var secret = 'foremly';
 	var token = this.current_session_token;
 	var expires_time = 60 * 60;
+	//var expires_time = 4;
 	var current_user = this;
+	var self = this;
+
+	debugger;
 
 	jwt.verify(this.current_session_token, secret, function(err, decoded){
 		if(err){
-			token = jwt.sign({user: this.user_id}, secret, {expiresIn: expires_time});
+			debugger;
+			token = jwt.sign({user: self.user_id}, secret, {expiresIn: expires_time});
 			current_user.current_session_token = token;
 		}
+			debugger;
 		callback();
 	});
 };
