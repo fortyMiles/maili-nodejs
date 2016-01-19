@@ -53,8 +53,13 @@ var create_relation = function(req, res, next){
 
 
 		// get relation bewteen inviter and invitee.
-		inviter_call_invitee = caculate_inviter_and_invitee_relationship(inviter, invitee, invitee_position, home);
-		invitee_call_inviter = relation_value.get_converse_relation(inviter.is_male(), inviter_call_invitee);
+		try{
+			inviter_call_invitee = caculate_inviter_and_invitee_relationship(inviter, invitee, invitee_position, home);
+			invitee_call_inviter = relation_value.get_converse_relation(inviter.is_male(), inviter_call_invitee);
+		}catch(err){
+			res.status(406);
+			res.json({error: 'this relation is unacceptable'});
+		}
 
 		// create this realtion in db.
 		relation_handler.create_new_relation({
@@ -65,7 +70,6 @@ var create_relation = function(req, res, next){
 		});
 
 		// check if find one's self home.
-		debugger;
 		if(invitee.find_self_home(invitee_position)){
 			invitee.change_default_home(home.home_id, home.owner);
 		}else{
@@ -127,7 +131,6 @@ var add_invitee_to_home = function(req, res, next){
 	var invitee = req.locals.invitee;
 
 	home.add_member(invitee, position);
-	debugger;
 	home.save();
 
 	res.status(200);
