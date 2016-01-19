@@ -105,7 +105,6 @@ UserSchema.statics.login = function(phone, password, callback){
 	model.findOne({phone: phone, password: password}, function(error, user){
 		if(error) throw error;
 		if(user){
-			debugger;
 			user.generate_session_code(function(){
 				user.login_time += 1;
 				user.is_login = true;
@@ -241,7 +240,7 @@ UserSchema.methods.add_contractor = function(user_id, relation, nickname){
  */
 
 var create_id_by_name_and_time = function(name, group_name){
-	var last_code = group_name.charCodeAt(0);
+	var last_code = group_name.charCodeAt( group_name.length - 1);
 	var static_num = 1214;
 	var tile_code= last_code * last_code * static_num;
 	var id = name + tile_code;
@@ -307,7 +306,9 @@ UserSchema.methods.get_home_position = function(){
  */
 
 UserSchema.methods.initial_self_home = function(){
-	var home_id = create_id_by_name_and_time(this.phone, 'home');
+	debugger;
+	var home_length = this.home.length;
+	var home_id = create_id_by_name_and_time(this.phone, 'home' + home_length.toString());
 	this.default_home = home_id;
 	this.default_home_position = this.get_home_position();
 
@@ -381,15 +382,11 @@ UserSchema.methods.generate_session_code = function(callback){
 	var current_user = this;
 	var self = this;
 
-	debugger;
-
 	jwt.verify(this.current_session_token, secret, function(err, decoded){
 		if(err){
-			debugger;
 			token = jwt.sign({user: self.user_id}, secret, {expiresIn: expires_time});
 			current_user.current_session_token = token;
 		}
-			debugger;
 		callback();
 	});
 };
@@ -416,7 +413,16 @@ UserSchema.methods.initiate = function(){
 
 UserSchema.methods.create_new_home = function(){
 	this.initial_self_home();
-	this.add_a_home(this.default_home, this.phone);
+	var SELF = 'self';
+
+	this.home = this.home.map(function(e){
+		if(e.home_relation == 'self'){
+			e.home_relation = '父亲';
+		}
+		return e;
+	});
+
+	this.add_a_home(this.default_home, this.user_id);
 };
 /*
  * Find self home. 

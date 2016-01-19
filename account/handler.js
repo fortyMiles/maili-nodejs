@@ -1,5 +1,4 @@
 /*
- * Data handler.
  *
  * @Author Minchiuan Gao <minchiuan.gao@gmail.com>
  * @Date 2016-17-Dec
